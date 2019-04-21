@@ -12,7 +12,7 @@ Colores corporativos:
  237/110/0
 
 * Requerimientos:
-**HECHO** - Estética Mr Houston
+**HECHO** - Estética Mr Houston (cambiado a #ED6E00)
 - Poner logo MrH en HTML
 - Cambiar los fantasmas por virus (svg)
 - Realizar nuevo mapa en función de la dimensión de la pantalla
