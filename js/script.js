@@ -131,7 +131,7 @@ Pacman.Ghost = function (game, map, colour) {
             if (secondsAgo(eatable) > 5) {
                 return game.getTick() % 20 > 10 ? "#FFFFFF" : "#0000BB"; //custom: final time ghost
             } else {
-                return "#FF6816"; //custom: changing color ghost
+                return "#ED6E00"; //custom: changing color ghost
             }
         } else if(eaten) {
             return "#222"; //custom: ghost eaten color
@@ -559,7 +559,7 @@ Pacman.Map = function (size) {
 
         var i, j, p, line;
 
-        ctx.strokeStyle = "#FF6816"; // !custom: walls
+        ctx.strokeStyle = "#ED6E00"; // !custom: walls
         ctx.lineWidth   = 5;
         ctx.lineCap     = "round";
 
