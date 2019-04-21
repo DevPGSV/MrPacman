@@ -18,3 +18,6 @@ Colores corporativos:
 - Realizar nuevo mapa en función de la dimensión de la pantalla
 - Ranking (para cada día)
 - Registro de usuario
+
+
+Estoy revisando la forma del plano, para adaptarla a la pantalla. Se me ha ocurrido ampliar el ancho a 40 y el alto mantenerlo en 22.
