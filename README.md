@@ -13,8 +13,8 @@ Colores corporativos:
 
 * Requerimientos:
 **HECHO** - Estética Mr Houston
-Poner logo MrH en HTML
-Cambiar los fantasmas por virus (svg)
-Realizar nuevo mapa en función de la dimensión de la pantalla
-Ranking (para cada día)
-Registro de usuario
+- Poner logo MrH en HTML
+- Cambiar los fantasmas por virus (svg)
+- Realizar nuevo mapa en función de la dimensión de la pantalla
+- Ranking (para cada día)
+- Registro de usuario
