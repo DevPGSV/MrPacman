@@ -30,6 +30,8 @@ var colors = {
 };
 colors.footerBackground = colors.background;
 
+
+
 var NONE        = 4,
     UP          = 3,
     LEFT        = 2,
@@ -42,6 +44,27 @@ var NONE        = 4,
     EATEN_PAUSE = 9,
     DYING       = 10,
     Pacman      = {};
+
+
+
+var portals = [
+  {
+    coords: {x:18, y:10},
+    directions: [RIGHT],
+    destination: {x:0, y:10},
+    //newDirection: RIGHT,
+  },{
+    coords: {x:0, y:10},
+    directions: [LEFT],
+    destination: {x:19, y:10},
+    //newDirection: LEFT,
+  },{
+    coords: {x:6, y:12},
+    directions: [NONE],
+    destination: {x:6, y:20},
+    //newDirection: LEFT,
+  },
+];
 
 Pacman.FPS = 30;
 
@@ -438,13 +461,37 @@ Pacman.User = function (game, map) {
         if (direction === NONE) {
             return {"new" : position, "old" : position};
         }
-
+        /*
         if (npos.y === 100 && npos.x >= 190 && direction === RIGHT) {
             npos = {"y": 100, "x": -10};
         }
 
         if (npos.y === 100 && npos.x <= -12 && direction === LEFT) {
             npos = {"y": 100, "x": 190};
+        }
+        */
+
+        blockSize = map.blockSize;
+
+        for (i = 0; i < portals.length; i += 1) {
+          portal = portals[i];
+          px = (portal.coords.x * 10);
+          py = (portal.coords.y * 10);
+          if (
+            npos.y >= py-5 &&
+            npos.y <= py+5 &&
+            npos.x >= px-5 &&
+            npos.x <= px+5 &&
+            (
+              portal.directions.includes(NONE) ||
+              portal.directions.includes(direction)
+            )
+          ) {
+            npos = {
+              x: portal.destination.x * 10,
+              y: portal.destination.y * 10,
+            };
+          }
         }
 
         position = npos;
@@ -606,6 +653,7 @@ Pacman.Map = function (size) {
             }
             ctx.stroke();
         }
+
     }
 
     function reset() {
@@ -634,7 +682,7 @@ Pacman.Map = function (size) {
                     ctx.beginPath();
 
                     ctx.fillStyle = colors.background;
-		            ctx.fillRect((j * blockSize), (i * blockSize),
+		                ctx.fillRect((j * blockSize), (i * blockSize),
                                  blockSize, blockSize);
 
                     ctx.fillStyle = colors.pills;
@@ -648,6 +696,50 @@ Pacman.Map = function (size) {
                 }
 		    }
 	    }
+
+      // draw Portals
+      var drawPortals = true;
+      if (drawPortals) {
+        circleRadius = 5;
+        for (i = 0; i < portals.length; i += 1) {
+            portal = portals[i];
+            pdx = portal.destination.x;
+            pdy = portal.destination.y;
+            pcx = portal.coords.x;
+            pcy = portal.coords.y;
+
+            pdxm = pdx * blockSize + blockSize / 2;
+            pdym = pdy * blockSize + blockSize / 2;
+            pcxm = pcx * blockSize + blockSize / 2;
+            pcym = pcy * blockSize + blockSize / 2;
+
+            // Draw portal circle
+            ctx.strokeStyle = 'magenta';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(
+              pcxm,
+              pcym,
+              circleRadius, 0, Math.PI * 2, false);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Draw portal path
+            var gradient = ctx.createLinearGradient(pcxm, pcym, pdxm, pdym);
+            gradient.addColorStop("0", "magenta");
+            gradient.addColorStop("0.8", "blue");
+            gradient.addColorStop("1.0", "red");
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            lineOffsetX = circleRadius - 1;
+            lineOffsetY = circleRadius - 1;
+            ctx.moveTo(pcxm + lineOffsetX, pcym + lineOffsetX);
+            ctx.lineTo(pdxm, pdym);
+            ctx.closePath();
+            ctx.stroke();
+        }
+      }
     };
 
     function draw(ctx) {
