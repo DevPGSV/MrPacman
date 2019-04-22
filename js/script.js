@@ -897,7 +897,7 @@ var PACMAN = (function () {
         ctx.fillStyle = !soundDisabled() ? "#00FF00" : "#FF0000"; //custom: enabled-disabled color
         ctx.font = "bold 16px sans-serif";
         ctx.fillText("♪", 10, textBase);
-       // ctx.fillText("s", 10, textBase);
+        //ctx.fillText("s", 10, textBase);
 
         ctx.fillStyle = "#FFFFFF"; //custom: footer words
         ctx.font      = "14px Calibri";
