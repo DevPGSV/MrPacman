@@ -13,11 +13,7 @@ Colores corporativos:
 
 * Requerimientos:
 **HECHO** - Estética Mr Houston (cambiado a #ED6E00)
-<<<<<<< HEAD
 **HECHO** - Poner logo MrH en HTML
-=======
-- Poner logo MrH en HTML
->>>>>>> f13eb1dbcf0b86b34e156a1384a18fa1ce979a8c
 - Cambiar los fantasmas por virus (svg)
 - Realizar nuevo mapa en función de la dimensión de la pantalla
 - Ranking (para cada día)
