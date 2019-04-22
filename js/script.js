@@ -24,7 +24,7 @@ var colors = {
   'biscuits': '#FFF',
   'ghosts': ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847"],
   'ghostEdibleEatenText': "#FFFFFF",
-  'ghostEdible': '#ED6E00',
+  'ghostEdible': COLOR_ORANGE_MRHOUSTON,
   'ghostEdibleEaten': '#222',
   'ghostEdibleBlinking': ['#FFFFFF', '#0000BB'],
 };
