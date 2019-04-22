@@ -8,6 +8,28 @@
  * do proper ghost mechanics (blinky/wimpy etc)
  */
 
+
+var COLOR_ORANGE_MRHOUSTON = '#ED6E00';
+
+var colors = {
+  'walls': COLOR_ORANGE_MRHOUSTON,
+  'background': 'black',
+  'dialog': '#FFF',
+  'lifes': '#FFFF00',
+  'footerText': '#FFFFFF',
+  'footerBackground': '#000000',
+  'pacman': '#FFFF00',
+  'pacmanDead': '#FFFF00',
+  'pills': '#FFF',
+  'biscuits': '#FFF',
+  'ghosts': ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847"],
+  'ghostEdibleEatenText': "#FFFFFF",
+  'ghostEdible': COLOR_ORANGE_MRHOUSTON,
+  'ghostEdibleEaten': '#222',
+  'ghostEdibleBlinking': ['#FFFFFF', '#0000BB'],
+};
+colors.footerBackground = colors.background;
+
 var NONE        = 4,
     UP          = 3,
     LEFT        = 2,
@@ -129,12 +151,12 @@ Pacman.Ghost = function (game, map, colour) {
     function getColour() {
         if (eatable) {
             if (secondsAgo(eatable) > 5) {
-                return game.getTick() % 20 > 10 ? "#FFFFFF" : "#0000BB"; //custom: final time ghost
+                return game.getTick() % 20 > 10 ? colors.ghostEdibleBlinking[0] : colors.ghostEdibleBlinking[1];
             } else {
-                return "#ED6E00"; //custom: changing color ghost
+                return colors.ghostEdible;
             }
         } else if(eaten) {
-            return "#222"; //custom: ghost eaten color
+            return colors.ghostEdibleEaten;
         }
         return colour;
     };
@@ -479,7 +501,7 @@ Pacman.User = function (game, map) {
             return;
         }
 
-        ctx.fillStyle = "#FFFF00"; //custom: pacman's dead color
+        ctx.fillStyle = colors.pacmanDead;
         ctx.beginPath();
         ctx.moveTo(((position.x/10) * size) + half,
                    ((position.y/10) * size) + half);
@@ -496,7 +518,7 @@ Pacman.User = function (game, map) {
         var s     = map.blockSize,
             angle = calcAngle(direction, position);
 
-        ctx.fillStyle = "#FFFF00"; //custom: pacman's color
+        ctx.fillStyle = colors.pacman;
 
         ctx.beginPath();
 
@@ -559,7 +581,7 @@ Pacman.Map = function (size) {
 
         var i, j, p, line;
 
-        ctx.strokeStyle = "#ED6E00"; // !custom: walls
+        ctx.strokeStyle = colors.walls;
         ctx.lineWidth   = 5;
         ctx.lineCap     = "round";
 
@@ -611,11 +633,11 @@ Pacman.Map = function (size) {
                 if (map[i][j] === Pacman.PILL) {
                     ctx.beginPath();
 
-                    ctx.fillStyle = "#000"; //custom: superPellets background
+                    ctx.fillStyle = colors.background;
 		            ctx.fillRect((j * blockSize), (i * blockSize),
                                  blockSize, blockSize);
 
-                    ctx.fillStyle = "#FFF"; //custom: superPellets color
+                    ctx.fillStyle = colors.pills;
                     ctx.arc((j * blockSize) + blockSize / 2,
                             (i * blockSize) + blockSize / 2,
                             Math.abs(5 - (pillSize/3)),
@@ -632,7 +654,7 @@ Pacman.Map = function (size) {
 
         var i, j, size = blockSize;
 
-        ctx.fillStyle = "#000"; //custom: background walls
+        ctx.fillStyle = colors.background;
 	    ctx.fillRect(0, 0, width * size, height * size);
 
         drawWall(ctx);
@@ -657,12 +679,12 @@ Pacman.Map = function (size) {
         if (layout === Pacman.EMPTY || layout === Pacman.BLOCK ||
             layout === Pacman.BISCUIT) {
 
-            ctx.fillStyle = "#000"; //custom: background color cells
+            ctx.fillStyle = colors.background;
 		    ctx.fillRect((x * blockSize), (y * blockSize),
                          blockSize, blockSize);
 
             if (layout === Pacman.BISCUIT) {
-                ctx.fillStyle = "#FFF"; // custom: pellets
+                ctx.fillStyle = colors.biscuits;
 		        ctx.fillRect((x * blockSize) + (blockSize / 2.5),
                              (y * blockSize) + (blockSize / 2.5),
                              blockSize / 6, blockSize / 6);
@@ -775,7 +797,7 @@ var PACMAN = (function () {
     var state        = WAITING,
         audio        = null,
         ghosts       = [],
-        ghostSpecs   = ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847"], // custom: ghost colors
+        ghostSpecs   = colors.ghosts, // custom: ghost colors
         eatenCount   = 0,
         level        = 0,
         tick         = 0,
@@ -794,7 +816,7 @@ var PACMAN = (function () {
     };
 
     function drawScore(text, position) {
-        ctx.fillStyle = "red"; //custom: ghost eaten score
+        ctx.fillStyle = colors.ghostEatenText;
         ctx.font      = "12px BDCartoonShoutRegular";
         ctx.fillText(text,
                      (position["new"]["x"] / 10) * map.blockSize,
@@ -802,7 +824,7 @@ var PACMAN = (function () {
     }
 
     function dialog(text) {
-        ctx.fillStyle = "#FFF"; // !custom: dialog color
+        ctx.fillStyle = colors.dialog;
         ctx.font      = "18px Calibri";
         var width = ctx.measureText(text).width,
             x     = ((map.width * map.blockSize) - width) / 2;
@@ -877,13 +899,13 @@ var PACMAN = (function () {
         var topLeft  = (map.height * map.blockSize),
             textBase = topLeft + 17;
 
-        ctx.fillStyle = "#000000"; //custom: footer color
+        ctx.fillStyle = colors.footerBackground;
         ctx.fillRect(0, topLeft, (map.width * map.blockSize), 30);
 
         ctx.fillStyle = "#FFFF00"; //custom: ?
 
         for (var i = 0, len = user.getLives(); i < len; i++) {
-            ctx.fillStyle = "#FFFF00"; //custom: pacman lifes
+            ctx.fillStyle = colors.lifes;
             ctx.beginPath();
             ctx.moveTo(150 + (25 * i) + map.blockSize / 2,
                        (topLeft+1) + map.blockSize / 2);
@@ -897,9 +919,9 @@ var PACMAN = (function () {
         ctx.fillStyle = !soundDisabled() ? "#00FF00" : "#FF0000"; //custom: enabled-disabled color
         ctx.font = "bold 16px sans-serif";
         ctx.fillText("♪", 10, textBase);
-       // ctx.fillText("s", 10, textBase);
+        //ctx.fillText("s", 10, textBase);
 
-        ctx.fillStyle = "#FFFFFF"; //custom: footer words
+        ctx.fillStyle = colors.footerText;
         ctx.font      = "14px Calibri";
         ctx.fillText("Score: " + user.theScore(), 30, textBase);
         ctx.fillText("Level: " + level, 260, textBase);
@@ -1124,7 +1146,7 @@ Pacman.BLOCK   = 3;
 Pacman.PILL    = 4;
 
 Pacman.MAP = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
 	[0, 4, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 4, 0],
 	[0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
