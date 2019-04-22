@@ -1,12 +1,29 @@
+* {
+  margin:0;
+  padding:0;
+}
+
 body {
   background-color: #000;
+  font-family: sans-serif;
+  padding-top: 2%;
 }
 
 #pacman {
   height: 470px;
   width: 382px;
   border-radius: 5px;
-  margin: 20px auto;
+  margin: 5px auto;
+}
+
+img {
+  padding: 1%;
+  background-color: white;
+  height: 74px;
+  width: 279px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #shim {
@@ -17,14 +34,22 @@ body {
 
 h1 {
   font-family: 'Permanent Marker', cursive;
+  text-transform: uppercase;
   text-align: center;
   color: #FFFFFF;
+  background-color: #000000;
+  padding-top: 0.5%;
+  height: 12%;
+  width: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-body {
-  width: 342px;
-  margin: 0px auto;
-  font-family: sans-serif;
+
+
+p, small {
+  color: white;
 }
 
 /*a {
