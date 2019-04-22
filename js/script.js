@@ -48,22 +48,28 @@ var NONE        = 4,
 
 
 var portals = [
+
   {
-    coords: {x:18, y:10},
-    directions: [RIGHT],
-    destination: {x:0, y:10},
+    coords: {x:11, y:0},
+    directions: [UP],
+    destination: {x:11, y:18},
     //newDirection: RIGHT,
-  },{
-    coords: {x:0, y:10},
-    directions: [LEFT],
-    destination: {x:19, y:10},
-    //newDirection: LEFT,
-  },{
-    coords: {x:6, y:12},
-    directions: [NONE],
-    destination: {x:6, y:20},
-    //newDirection: LEFT,
-  },
+  }, {
+    coords: {x:11, y:18},
+    directions: [DOWN],
+    destination: {x:11, y:0},
+    //newDirection: RIGHT,
+  }, {
+    coords: {x:31, y:0},
+    directions: [UP],
+    destination: {x:31, y:18},
+    //newDirection: RIGHT,
+  }, {
+    coords: {x:31, y:18},
+    directions: [DOWN],
+    destination: {x:31, y:0},
+    //newDirection: RIGHT,
+  }
 ];
 
 Pacman.FPS = 30;
@@ -1144,11 +1150,11 @@ var PACMAN = (function () {
     function init(wrapper, root) {
 
         var i, len, ghost,
-            blockSize = wrapper.offsetWidth / 19,
+            blockSize = wrapper.offsetWidth / 19, // wrapper.offsetWidth / Pacman.MAP[0].length
             canvas    = document.createElement("canvas");
 
-        canvas.setAttribute("width", (blockSize * 19) + "px");
-        canvas.setAttribute("height", (blockSize * 22) + 30 + "px");
+        canvas.setAttribute("width", (blockSize * Pacman.MAP[0].length) + "px");
+        canvas.setAttribute("height", (blockSize * Pacman.MAP.length) + 30 + "px");
 
         wrapper.appendChild(canvas);
 
@@ -1260,7 +1266,32 @@ Pacman.MAP = [
 ];
 
 Pacman.WALLS = [
-
+  [
+    {"move": [10.5, 0]}, {"line": [10.5, 3]},
+    {"curve": [10.5, 3.5, 10, 3.5]}, {"line": [9, 3.5]},
+    {"curve": [8.5, 3.5, 8.5, 3]}, {"line": [8.5, 1]},
+    {"curve": [8.5, 0.5, 8, 0.5]}, {"line": [5, 0.5]},
+    {"curve": [4.5, 0.5, 4.5, 1]}, {"line": [4.5, 2]}, {"line": [4.5, 1]},
+    {"curve": [4.5, 0.5, 4, 0.5]}, {"line": [1, 0.5]},
+    {"curve": [0.5, 0.5, 0.5, 1]}, {"line": [0.5, 18]},
+    {"curve": [0.5, 18.5, 1, 18.5]}, {"line": [4, 18.5]},
+    {"curve": [4.5, 18.5, 4.5, 18]}, {"line": [4.5, 17]}, {"line": [4.5, 18]},
+    {"curve": [4.5, 18.5, 5, 18.5]}, {"line": [8, 18.5]},
+    {"curve": [8.5, 18.5, 8.5, 18]}, {"line": [8.5, 16]},
+    {"curve": [8.5, 15.5, 9, 15.5]}, {"line": [10, 15.5]},
+    {"curve": [10.5, 15.5, 10.5, 16]}, {"line": [10.5, 19]},
+  ], [
+    {"move": [12.5, 19]}, {"line": [12.5, 16]},
+    {"curve": [12.5, 15.5, 13, 15.5]}, {"line": [14, 15.5]},
+    {"curve": [14.5, 15.5, 14.5, 16]}, {"line": [14.5, 18]},
+    {"curve": [14.5, 18.5, 15, 18.5]}, {"line": [21, 18.5]},
+    {"curve": [21.5, 18.5, 21.5, 18]}, {"line": [21.5, 15.5]}, {"line": [21.5, 18]},
+    {"curve": [21.5, 18.5, 22, 18.5]}, {"line": [28, 18.5]},
+    {"curve": [28.5, 18.5, 28.5, 18]}, {"line": [28.5, 16]},
+    {"curve": [28.5, 15.5, 29, 15.5]}, {"line": [30, 15.5]},
+    {"curve": [30.5, 15.5, 30.5, 16]}, {"line": [30.5, 19]},
+  ],
+/*
     [{"move": [0, 9.5]}, {"line": [3, 9.5]},
      {"curve": [3.5, 9.5, 3.5, 9]}, {"line": [3.5, 8]},
      {"curve": [3.5, 7.5, 3, 7.5]}, {"line": [1, 7.5]},
@@ -1362,6 +1393,7 @@ Pacman.WALLS = [
      {"line": [11, 11.5]}, {"curve": [11.5, 11.5, 11.5, 11]},
      {"line": [11.5, 10]}, {"curve": [11.5, 9.5, 11, 9.5]},
      {"line": [10.5, 9.5]}]
+*/
 ];
 
 Object.prototype.clone = function () {
