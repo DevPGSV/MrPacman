@@ -592,11 +592,26 @@ Pacman.User = function (game, map) {
         var pxm = ((position.x/10) * s) + s / 2 - s/2;
         var pxy = ((position.y/10) * s) + s / 2 - s/2;
 
-        if (amount >= 1) {
-            return;
+        var spriteStep = 0;
+        var spriteDirCoordsStepTicks = Pacman.FPS / 8;
+        var spriteDirCoordsStep = Math.floor((game.getTick() % (4 * spriteDirCoordsStepTicks)) / spriteDirCoordsStepTicks)
+        var spriteDirCoords = 0;
+        if (spriteDirCoordsStep === 0) {
+          spriteDirCoords = sprites.player.width * 0;
+        } else if (spriteDirCoordsStep === 1) {
+          spriteDirCoords = sprites.player.width * 3;
+        } else if (spriteDirCoordsStep === 2) {
+          spriteDirCoords = sprites.player.width * 2;
+        } else if (spriteDirCoordsStep === 3) {
+          spriteDirCoords = sprites.player.width * 1;
         }
 
-        ctx.drawImage(sprites.player.img, 0, 0, 15, 21, pxm, pxy, s, s);
+        if (amount >= 1) {
+          spriteDirCoords = 0;
+        }
+
+        ctx.drawImage(sprites.player.img, spriteDirCoords, sprites.player.height * spriteStep, sprites.player.width, sprites.player.height, pxm, pxy, s, s);
+        //console.log(spriteDirCoordsStep);
 
         /*
         var size = map.blockSize,
