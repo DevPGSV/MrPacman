@@ -30,6 +30,9 @@ var colors = {
 };
 colors.footerBackground = colors.background;
 
+var imgPlayer = new Image();
+imgPlayer.src = 'img/pacmansprite.png';
+imgPlayer.alt = 'MrH';
 
 
 var NONE        = 4,
@@ -592,7 +595,54 @@ Pacman.User = function (game, map) {
         ctx.fill();
     };
 
+    var steptime = 10;
+    var step = 0;
     function draw(ctx) { // draw pacman
+        var s     = map.blockSize,
+          angle = calcAngle(direction, position);
+        var pxm = ((position.x/10) * s) + s / 2;
+        var pxy = ((position.y/10) * s) + s / 2;
+
+
+        var dirCoords = 0;
+        if (direction === DOWN) {
+          dirCoords = 0
+        } else if (direction === UP) {
+          dirCoords = 15;
+        } else if (direction === RIGHT) {
+          dirCoords = 45;
+        } else if (direction === LEFT) {
+          dirCoords = 30;
+        }
+        /*
+        ticktime = game.getTick() % 20;
+        step = 0;
+        if (ticktime > 20%6*1) {
+          step = 1;
+        } else if (ticktime > 20%6*2) {
+          step = 2;
+        } else if (ticktime > 20%6*3) {
+          step = 3;
+        } else if (ticktime > 20%6*4) {
+          step = 4;
+        } else if (ticktime > 20%6*5) {
+          step = 5;
+        } else if (ticktime > 20%6*6) {
+          step = 6;
+        }
+        */
+        //step = 0;
+        steptime--;
+        if (steptime < 0) {
+          steptime = 10;
+          step++;
+        }
+        if (step > 5) step = 0;
+
+
+        ctx.drawImage(imgPlayer, dirCoords, 21 * step, 15, 21, pxm - s/2, pxy - s/2, s, s);
+
+        /*
         var s     = map.blockSize,
             angle = calcAngle(direction, position);
 
@@ -609,6 +659,7 @@ Pacman.User = function (game, map) {
                 Math.PI * angle.end, angle.direction);
 
         ctx.fill();
+        */
     };
 
     initUser();
@@ -1028,6 +1079,27 @@ var PACMAN = (function () {
         ctx.fillStyle = "#FFFF00"; //custom: ?
 
         for (var i = 0, len = user.getLives(); i < len; i++) {
+            s = map.blockSize;
+            /*
+            ticktime = game.getTick() % 20;
+            step = 0;
+            if (ticktime > 20%6*1) {
+              step = 1;
+            } else if (ticktime > 20%6*2) {
+              step = 2;
+            } else if (ticktime > 20%6*3) {
+              step = 3;
+            } else if (ticktime > 20%6*4) {
+              step = 4;
+            } else if (ticktime > 20%6*5) {
+              step = 5;
+            } else if (ticktime > 20%6*6) {
+              step = 6;
+            }
+            */
+            ctx.drawImage(imgPlayer, 0, 21, 15, 21, 150 + (25 * i) + map.blockSize / 2 - s/2, (topLeft+1) + map.blockSize / 2 - s/2, s, s);
+            // !!!
+            /*
             ctx.fillStyle = colors.lifes;
             ctx.beginPath();
             ctx.moveTo(150 + (25 * i) + map.blockSize / 2,
@@ -1037,6 +1109,7 @@ var PACMAN = (function () {
                     (topLeft+1) + map.blockSize / 2,
                     map.blockSize / 2, Math.PI * 0.25, Math.PI * 1.75, false);
             ctx.fill();
+            */
         }
 
         ctx.fillStyle = !soundDisabled() ? "#00FF00" : "#FF0000"; //custom: enabled-disabled color
