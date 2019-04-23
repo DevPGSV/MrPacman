@@ -225,6 +225,10 @@ Pacman.Ghost = function (game, map, colour) {
         var high = game.getTick() % 10 > 5 ? 3  : -3;
         var low  = game.getTick() % 10 > 5 ? -3 : 3;
 
+        pxm = left;
+        pym = top;
+        //ctx.drawImage(sprites.player.img, 0, sprites.player.height * 0, sprites.player.width, sprites.player.height, pxm, pym, s, s);
+
         ctx.fillStyle = getColour();
         ctx.beginPath();
 
@@ -265,6 +269,7 @@ Pacman.Ghost = function (game, map, colour) {
                 s / 15, 0, 300, false);
         ctx.closePath();
         ctx.fill();
+
 
     };
 
@@ -590,7 +595,7 @@ Pacman.User = function (game, map) {
 
          // Pixel map coordinates in canvas to draw pacman
         var pxm = ((position.x/10) * s) + s / 2 - s/2;
-        var pxy = ((position.y/10) * s) + s / 2 - s/2;
+        var pym = ((position.y/10) * s) + s / 2 - s/2;
 
         var spriteStep = 0;
         var spriteDirCoordsStepTicks = Pacman.FPS / 8;
@@ -610,7 +615,7 @@ Pacman.User = function (game, map) {
           spriteDirCoords = 0;
         }
 
-        ctx.drawImage(sprites.player.img, spriteDirCoords, sprites.player.height * spriteStep, sprites.player.width, sprites.player.height, pxm, pxy, s, s);
+        ctx.drawImage(sprites.player.img, spriteDirCoords, sprites.player.height * spriteStep, sprites.player.width, sprites.player.height, pxm, pym, s, s);
         //console.log(spriteDirCoordsStep);
 
         /*
@@ -641,7 +646,7 @@ Pacman.User = function (game, map) {
 
          // Pixel map coordinates in canvas to draw pacman
         var pxm = ((position.x/10) * s) + s / 2 - s/2;
-        var pxy = ((position.y/10) * s) + s / 2 - s/2;
+        var pym = ((position.y/10) * s) + s / 2 - s/2;
 
         // Calc sprite step
         var spriteSteps = sprites.player.steps;
@@ -667,7 +672,7 @@ Pacman.User = function (game, map) {
         }
 
         // Draw
-        ctx.drawImage(sprites.player.img, spriteDirCoords, sprites.player.height * spriteStep, sprites.player.width, sprites.player.height, pxm, pxy, s, s);
+        ctx.drawImage(sprites.player.img, spriteDirCoords, sprites.player.height * spriteStep, sprites.player.width, sprites.player.height, pxm, pym, s, s);
 
 
         // Original draw pacman
