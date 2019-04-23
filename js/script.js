@@ -8,6 +8,9 @@
  * do proper ghost mechanics (blinky/wimpy etc)
  */
 
+var speedMultiplier = 1;
+var startGameCountdown = 3;
+var biscuitsToCompleteLevel = 200; // 357 + 8 = 365
 
 var COLOR_ORANGE_MRHOUSTON = '#ED6E00';
 
@@ -583,8 +586,7 @@ Pacman.User = function (game, map) {
             map.setBlock(nextWhole, Pacman.EMPTY);
             addScore((block === Pacman.BISCUIT) ? 10 : 50);
             eaten += 1;
-
-            if (eaten === 182) {
+            if (eaten === biscuitsToCompleteLevel) { // 182 | 357
                 game.completedLevel();
             }
 
@@ -1253,7 +1255,7 @@ var PACMAN = (function () {
             }
         } else if (state === COUNTDOWN) {
 
-            diff = 2 + Math.floor((timerStart - tick) / Pacman.FPS);
+            diff = startGameCountdown + Math.floor((timerStart - tick) / Pacman.FPS);
 
             if (diff === 0) {
                 map.draw(ctx);
@@ -1268,6 +1270,9 @@ var PACMAN = (function () {
         }
 
         drawFooter();
+
+        speedMultiplier = 1 + (0.2 * level)
+        timer = window.setTimeout(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
     }
 
     function eatenPill() {
@@ -1354,8 +1359,8 @@ var PACMAN = (function () {
         document.addEventListener("keydown", keyDown, true);
         document.addEventListener("keypress", keyPress, true);
 
-        var speedMultiplier = 1;
-        timer = window.setInterval(mainLoop, 1000 / Pacman.FPS * speedMultiplier);
+        mainLoop();
+        //timer = window.setInterval(mainLoop, 1000 / Pacman.FPS / speedMultiplier);
     };
 
     return {
