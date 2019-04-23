@@ -1204,7 +1204,7 @@ var PACMAN = (function () {
             }
         } else if (state === COUNTDOWN) {
 
-            diff = 5 + Math.floor((timerStart - tick) / Pacman.FPS);
+            diff = 2 + Math.floor((timerStart - tick) / Pacman.FPS);
 
             if (diff === 0) {
                 map.draw(ctx);
@@ -1304,7 +1304,8 @@ var PACMAN = (function () {
         document.addEventListener("keydown", keyDown, true);
         document.addEventListener("keypress", keyPress, true);
 
-        timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
+        var speedMultiplier = 1;
+        timer = window.setInterval(mainLoop, 1000 / Pacman.FPS * speedMultiplier);
     };
 
     return {
