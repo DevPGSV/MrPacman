@@ -807,6 +807,7 @@ Pacman.Map = function (size) {
             ctx.stroke();
 
             // Draw portal path
+            /*
             var gradient = ctx.createLinearGradient(pcxm, pcym, pdxm, pdym);
             gradient.addColorStop("0", "magenta");
             gradient.addColorStop("0.8", "blue");
@@ -820,6 +821,7 @@ Pacman.Map = function (size) {
             ctx.lineTo(pdxm, pdym);
             ctx.closePath();
             ctx.stroke();
+            */
         }
       }
     };
