@@ -631,6 +631,7 @@ Pacman.User = function (game, map) {
           step = 6;
         }
         */
+        console.log(game.getTick());
         //step = 0;
         steptime--;
         if (steptime < 0) {
@@ -639,8 +640,7 @@ Pacman.User = function (game, map) {
         }
         if (step > 5) step = 0;
 
-
-        ctx.drawImage(imgPlayer, dirCoords, 21 * step, 15, 21, pxm - s/2, pxy - s/2, s, s);
+        ctx.drawImage(imgPlayer, dirCoords, 22 * step, 15, 21, pxm - s/2, pxy - s/2, s, s);
 
         /*
         var s     = map.blockSize,
