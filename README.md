@@ -1,8 +1,9 @@
 # MrPacman
-    Entrega: 30/04
-    Lanzamiento: 08/05 Y 09/05
 
 Juego de Pacman para MrHouston.
+
+    Entrega: 30/04
+    Lanzamiento: 08/05 Y 09/05
 
 ## Especificaciones técnicas:
 
@@ -14,7 +15,8 @@ Juego de Pacman para MrHouston.
 
 - [x] Estética Mr Houston (cambiado a #ED6E00)
 - [x] Poner logo MrH en HTML
-- [ ] Cambiar los fantasmas por virus (svg)
-- [ ] Realizar nuevo mapa en función de la dimensión de la pantalla
+- [ ] Cambiar los fantasmas por virus
+- [x] Cambiar pacman por sprite
+- [x] Realizar nuevo mapa en función de la dimensión de la pantalla
 - [ ] Ranking (para cada día)
 - [ ] Registro de usuario
