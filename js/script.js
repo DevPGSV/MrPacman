@@ -30,9 +30,19 @@ var colors = {
 };
 colors.footerBackground = colors.background;
 
-var imgPlayer = new Image();
-imgPlayer.src = 'img/pacmansprite.png';
-imgPlayer.alt = 'MrH';
+
+var sprites = {
+  player: {
+    imgPath: 'img/pacmansprite.png',
+    img: null,
+    steps: 6,
+    cicleDurationSeconds: 1,
+    height: 22,
+    width: 15,
+  }
+};
+sprites.player.img = new Image();
+sprites.player.img.src = sprites.player.imgPath;
 
 
 var NONE        = 4,
@@ -575,7 +585,20 @@ Pacman.User = function (game, map) {
     };
 
     function drawDead(ctx, amount) {
+        var s     = map.blockSize;
+        var angle = calcAngle(direction, position);
 
+         // Pixel map coordinates in canvas to draw pacman
+        var pxm = ((position.x/10) * s) + s / 2 - s/2;
+        var pxy = ((position.y/10) * s) + s / 2 - s/2;
+
+        if (amount >= 1) {
+            return;
+        }
+
+        ctx.drawImage(sprites.player.img, 0, 0, 15, 21, pxm, pxy, s, s);
+
+        /*
         var size = map.blockSize,
             half = size / 2;
 
@@ -593,55 +616,46 @@ Pacman.User = function (game, map) {
                 half, 0, Math.PI * 2 * amount, true);
 
         ctx.fill();
+        */
     };
 
-    var steptime = 10;
-    var step = 0;
+
     function draw(ctx) { // draw pacman
-        var s     = map.blockSize,
-          angle = calcAngle(direction, position);
-        var pxm = ((position.x/10) * s) + s / 2;
-        var pxy = ((position.y/10) * s) + s / 2;
+        var s     = map.blockSize;
+        var angle = calcAngle(direction, position);
 
+         // Pixel map coordinates in canvas to draw pacman
+        var pxm = ((position.x/10) * s) + s / 2 - s/2;
+        var pxy = ((position.y/10) * s) + s / 2 - s/2;
 
-        var dirCoords = 0;
+        // Calc sprite step
+        var spriteSteps = sprites.player.steps;
+        var spriteCicleDurationSeconds = sprites.player.cicleDurationSeconds;
+        var spriteCicleDurationTicks = Pacman.FPS * spriteCicleDurationSeconds;
+        var spriteStepDurationTicks = spriteCicleDurationTicks / spriteSteps;
+        var spriteCicleTick = (game.getTick() % (spriteCicleDurationTicks));
+        var spriteStep = Math.floor(spriteCicleTick / spriteStepDurationTicks);
+
+        // Sprite direction coordinated in image
+        var spriteDirCoords = sprites.player.width * 0;
         if (direction === DOWN) {
-          dirCoords = 0
+          spriteDirCoords = sprites.player.width * 0;
         } else if (direction === UP) {
-          dirCoords = 15;
-        } else if (direction === RIGHT) {
-          dirCoords = 45;
+          spriteDirCoords = sprites.player.width * 1;
         } else if (direction === LEFT) {
-          dirCoords = 30;
+          spriteDirCoords = sprites.player.width * 2;
+        } else if (direction === RIGHT) {
+          spriteDirCoords = sprites.player.width * 3;
+        } else {
+          spriteDirCoords = sprites.player.width * 0;
+          spriteStep = 0;
         }
-        /*
-        ticktime = game.getTick() % 20;
-        step = 0;
-        if (ticktime > 20%6*1) {
-          step = 1;
-        } else if (ticktime > 20%6*2) {
-          step = 2;
-        } else if (ticktime > 20%6*3) {
-          step = 3;
-        } else if (ticktime > 20%6*4) {
-          step = 4;
-        } else if (ticktime > 20%6*5) {
-          step = 5;
-        } else if (ticktime > 20%6*6) {
-          step = 6;
-        }
-        */
-        console.log(game.getTick());
-        //step = 0;
-        steptime--;
-        if (steptime < 0) {
-          steptime = 10;
-          step++;
-        }
-        if (step > 5) step = 0;
 
-        ctx.drawImage(imgPlayer, dirCoords, 22 * step, 15, 21, pxm - s/2, pxy - s/2, s, s);
+        // Draw
+        ctx.drawImage(sprites.player.img, spriteDirCoords, sprites.player.height * spriteStep, sprites.player.width, sprites.player.height, pxm, pxy, s, s);
 
+
+        // Original draw pacman
         /*
         var s     = map.blockSize,
             angle = calcAngle(direction, position);
@@ -1082,25 +1096,10 @@ var PACMAN = (function () {
 
         for (var i = 0, len = user.getLives(); i < len; i++) {
             s = map.blockSize;
-            /*
-            ticktime = game.getTick() % 20;
-            step = 0;
-            if (ticktime > 20%6*1) {
-              step = 1;
-            } else if (ticktime > 20%6*2) {
-              step = 2;
-            } else if (ticktime > 20%6*3) {
-              step = 3;
-            } else if (ticktime > 20%6*4) {
-              step = 4;
-            } else if (ticktime > 20%6*5) {
-              step = 5;
-            } else if (ticktime > 20%6*6) {
-              step = 6;
-            }
-            */
-            ctx.drawImage(imgPlayer, 0, 21, 15, 21, 150 + (25 * i) + map.blockSize / 2 - s/2, (topLeft+1) + map.blockSize / 2 - s/2, s, s);
-            // !!!
+
+            ctx.drawImage(sprites.player.img, 0, 21, 15, 21, 150 + (25 * i) + map.blockSize / 2 - s/2, (topLeft+1) + map.blockSize / 2 - s/2, s, s);
+
+            // Original code
             /*
             ctx.fillStyle = colors.lifes;
             ctx.beginPath();
@@ -1264,7 +1263,8 @@ var PACMAN = (function () {
         map   = new Pacman.Map(blockSize);
         user  = new Pacman.User({
             "completedLevel" : completedLevel,
-            "eatenPill"      : eatenPill
+            "eatenPill"      : eatenPill,
+            "getTick"        : getTick
         }, map);
 
         for (i = 0, len = ghostSpecs.length; i < len; i += 1) {
