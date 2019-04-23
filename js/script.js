@@ -1271,7 +1271,7 @@ var PACMAN = (function () {
 
         drawFooter();
 
-        speedMultiplier = 1 + (0.2 * level)
+        speedMultiplier = 1 + (0.2 * (level - 1));
         timer = window.setTimeout(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
     }
 
