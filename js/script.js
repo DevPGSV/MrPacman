@@ -1294,7 +1294,7 @@ var PACMAN = (function () {
         }
     };
 
-    function init(wrapper, root) {
+    function init(wrapper) {
 
         var i, len, ghost,
             blockSize = wrapper.offsetWidth / Pacman.MAP[0].length, // wrapper.offsetWidth / Pacman.MAP[0].length
@@ -1326,12 +1326,12 @@ var PACMAN = (function () {
         var extension = Modernizr.audio.ogg ? 'ogg' : 'mp3';
 
         var audio_files = [
-            ["start", root + "audio/opening_song." + extension],
-            ["die", root + "audio/die." + extension],
-            ["eatghost", root + "audio/eatghost." + extension],
-            ["eatpill", root + "audio/eatpill." + extension],
-            ["eating", root + "audio/eating.short." + extension],
-            ["eating2", root + "audio/eating.short." + extension]
+            ["start", "audio/opening_song." + extension],
+            ["die", "audio/die." + extension],
+            ["eatghost", "audio/eatghost." + extension],
+            ["eatpill", "audio/eatpill." + extension],
+            ["eating", "audio/eating.short." + extension],
+            ["eating2", "audio/eating.short." + extension]
         ];
 
         load(audio_files, function() { loaded(); });
@@ -1686,7 +1686,7 @@ $(function(){
 
   if (Modernizr.canvas && Modernizr.localstorage &&
       Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
-    window.setTimeout(function () { PACMAN.init(el, "https://raw.githubusercontent.com/daleharvey/pacman/master/"); }, 0);
+    window.setTimeout(function () { PACMAN.init(el); }, 0);
   } else {
     el.innerHTML = "<p>Sorry, needs a decent browser</p><br /><small>" +
       "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
