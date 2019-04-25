@@ -1128,26 +1128,20 @@ var PACMAN = (function () {
     }
 
     function submitScore() {
-      console.log("Dead!", user.theScore());
-      $.ajax({
-        data: {
-          "username" : "pepe",
-          "score" : user.theScore(),
-        },
-        type: "POST",
-        dataType: "json",
-        url: "script.php",
-      })
-      .done(function( data, textStatus, jqXHR ) {
-        if ( console && console.log ) {
-          console.log( "La solicitud se ha completado correctamente." );
-        }
-      })
-      .fail(function( jqXHR, textStatus, errorThrown ) {
-        if ( console && console.log ) {
-          console.log( "La solicitud a fallado: " +  textStatus);
-        }
-      });
+      function http_build_params( obj ) { // https://stackoverflow.com/a/18116302/4114225
+        return '?'+Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
+      }
+
+      var submitData = {
+        "username" : "pepe",
+        "score" : user.theScore(),
+      };
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "POST", "submitForm.php" + http_build_params(submitData), false ); // false for synchronous request
+      xmlHttp.send( null );
+      console.log(xmlHttp.responseText);
+
+      console.log("Score:", user.theScore());
     }
 
     function setState(nState) {
