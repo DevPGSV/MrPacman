@@ -8,7 +8,7 @@
  * do proper ghost mechanics (blinky/wimpy etc)
  */
 
-var speedMultiplier = 1;
+var speedBaseMultiplier = 1;
 var startGameCountdown = 3;
 var biscuitsToCompleteLevel = 200; // 357 + 8 = 365
 
@@ -1121,7 +1121,32 @@ var PACMAN = (function () {
         user.loseLife();
         if (user.getLives() > 0) {
             startLevel();
+        } else {
+            submitScore();
         }
+    }
+
+    function submitScore() {
+      console.log("Dead!", user.theScore());
+      $.ajax({
+        data: {
+          "username" : "pepe",
+          "score" : user.theScore(),
+        },
+        type: "POST",
+        dataType: "json",
+        url: "script.php",
+      })
+      .done(function( data, textStatus, jqXHR ) {
+        if ( console && console.log ) {
+          console.log( "La solicitud se ha completado correctamente." );
+        }
+      })
+      .fail(function( jqXHR, textStatus, errorThrown ) {
+        if ( console && console.log ) {
+          console.log( "La solicitud a fallado: " +  textStatus);
+        }
+      });
     }
 
     function setState(nState) {
@@ -1271,7 +1296,7 @@ var PACMAN = (function () {
 
         drawFooter();
 
-        speedMultiplier = 1 + (0.2 * (level - 1));
+        var speedMultiplier = speedBaseMultiplier + (0.2 * (level - 1));
         timer = window.setTimeout(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
     }
 
