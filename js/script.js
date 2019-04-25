@@ -25,7 +25,7 @@ var colors = {
   'pacmanDead': '#FFFF00',
   'pills': '#FFF',
   'biscuits': '#FFF',
-  'ghosts': ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847"],
+  'ghosts': ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847", "#0022FF", "#00FF11", "#C300D1"],
   'ghostEdibleEatenText': "#FFFFFF",
   'ghostEdible': COLOR_ORANGE_MRHOUSTON,
   'ghostEdibleEaten': '#222',
