@@ -11,7 +11,7 @@
 var speedBaseMultiplier = 1;
 var speedLevelMultiplier = 0.2; // speed: speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
 var startGameCountdown = 3;
-var biscuitsToCompleteLevel = 200; // 357 + 8 = 365
+var biscuitsToCompleteLevel = 365; // 357 + 8 = 365
 
 var COLOR_ORANGE_MRHOUSTON = '#ED6E00';
 
