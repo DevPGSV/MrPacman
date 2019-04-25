@@ -1137,8 +1137,8 @@ var PACMAN = (function () {
         "score" : user.theScore(),
       };
       var xmlHttp = new XMLHttpRequest();
-      xmlHttp.open( "POST", "submitForm.php" + http_build_params(submitData), false ); // false for synchronous request
-      xmlHttp.send( null );
+      xmlHttp.open( "POST", "submitForm.php", false ); // false for synchronous request
+      xmlHttp.send( http_build_params(submitData) );
       console.log(xmlHttp.responseText);
 
       console.log("Score:", user.theScore());
