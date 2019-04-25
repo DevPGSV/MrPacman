@@ -9,6 +9,7 @@
  */
 
 var speedBaseMultiplier = 1;
+var speedLevelMultiplier = 0.2; // speed: speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
 var startGameCountdown = 3;
 var biscuitsToCompleteLevel = 200; // 357 + 8 = 365
 
@@ -1295,9 +1296,6 @@ var PACMAN = (function () {
         }
 
         drawFooter();
-
-        var speedMultiplier = speedBaseMultiplier + (0.2 * (level - 1));
-        timer = window.setTimeout(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
     }
 
     function eatenPill() {
@@ -1313,6 +1311,11 @@ var PACMAN = (function () {
         setState(WAITING);
         level += 1;
         map.reset();
+
+        var speedMultiplier = speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
+        clearInterval(timer);
+        timer = window.setInterval(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
+
         user.newLevel();
         startLevel();
     };
@@ -1386,6 +1389,9 @@ var PACMAN = (function () {
 
         mainLoop();
         //timer = window.setInterval(mainLoop, 1000 / Pacman.FPS / speedMultiplier);
+
+        var speedMultiplier = speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
+        timer = window.setInterval(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
     };
 
     return {
