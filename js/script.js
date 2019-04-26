@@ -1133,7 +1133,7 @@ var PACMAN = (function () {
       }
 
       var submitData = {
-        "username" : "pepe",
+        "uid" : 1,
         "score" : user.theScore(),
       };
       var xmlHttp = new XMLHttpRequest();
