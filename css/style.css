@@ -90,6 +90,19 @@ p, small, form {
 fieldset{
     padding: 3%;
 }
+
+#formulario .field label {
+  display: block;
+}
+#formulario .field input {
+  margin-top: 1px;
+  margin-bottom: 10px;
+}
+#formulario .required:after {
+  content: "*";
+  display: inline;
+  color: red;
+}
 /*a {
   text-decoration: none;
   color: #ED6E00;
