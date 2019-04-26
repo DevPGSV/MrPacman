@@ -7,11 +7,16 @@ body {
   background-color: #000;
   font-family: sans-serif;
   padding-top: 2%;
+  width: 100%;
 }
 
 #pacman {
+  /*
   height: 470px;
   width: 382px;
+  */
+  height: 670px;
+  width: 1000px;
   border-radius: 5px;
   margin: 5px auto;
 }
@@ -26,10 +31,12 @@ img {
   margin-right: auto;
 }
 
-#shim {
+h2 {
   font-family: 'Permanent Marker', cursive;
-  position: absolute;
-  visibility: hidden
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
 }
 
 h1 {
@@ -39,19 +46,50 @@ h1 {
   color: #FFFFFF;
   background-color: #000000;
   padding-top: 0.5%;
-  height: 12%;
+  /*height: 12%;*/
   width: auto;
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
-
-
-p, small {
+p, small, form {
   color: white;
 }
 
+
+#formulario{
+  display: block;
+  width: 100%
+}
+#formulario form {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#enviar{
+  width:125px;
+  height:35px;
+  text-decoration: none;
+  font-size: 17px;
+  color: #000000;
+  background-color: #FFFFFF;
+  border: 2px solid #ED6E00;
+  font-weight: bold;
+}
+
+#enviar:hover{
+  color: #FFFFFF;
+  background-color: #ED6E00;
+  border: 2px solid #000000;
+  font-weight: bold;
+
+}
+
+fieldset{
+    padding: 3%;
+}
 /*a {
   text-decoration: none;
   color: #ED6E00;

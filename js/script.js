@@ -8,6 +8,10 @@
  * do proper ghost mechanics (blinky/wimpy etc)
  */
 
+var speedBaseMultiplier = 1;
+var speedLevelMultiplier = 0.2; // speed: speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
+var startGameCountdown = 3;
+var biscuitsToCompleteLevel = 365; // 357 + 8 = 365
 
 var COLOR_ORANGE_MRHOUSTON = '#ED6E00';
 
@@ -22,13 +26,31 @@ var colors = {
   'pacmanDead': '#FFFF00',
   'pills': '#FFF',
   'biscuits': '#FFF',
-  'ghosts': ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847"],
+  'ghosts': ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847", "#0022FF", "#00FF11", "#C300D1"],
   'ghostEdibleEatenText': "#FFFFFF",
   'ghostEdible': COLOR_ORANGE_MRHOUSTON,
   'ghostEdibleEaten': '#222',
   'ghostEdibleBlinking': ['#FFFFFF', '#0000BB'],
 };
 colors.footerBackground = colors.background;
+
+
+var sprites = {
+  player: {
+    imgPath: 'img/pacmansprite.png',
+    img: null,
+    steps: 6,
+    cicleDurationSeconds: 1,
+    height: 22,
+    width: 15,
+  }
+};
+sprites.player.img = new Image();
+sprites.player.img.src = sprites.player.imgPath;
+
+// img/noun_virus_1867963_000000.svg
+// Set as a variable to avoid having to load more files than neccesary
+var ghostSvgSprite = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 34 34" enable-background="new 0 0 34 34" xml:space="preserve"><path d="M30,17h-4.525c-0.339-0.954-0.829-1.835-1.45-2.611l3.682-3.682C27.895,10.52,28,10.266,28,10V5c0-0.553-0.447-1-1-1  c-0.553,0-1,0.447-1,1v4.586l-3.389,3.389c-0.228-0.182-0.464-0.353-0.709-0.513c0.708-1,1.102-2.207,1.102-3.464  c0-1.294-0.416-2.491-1.116-3.472l2.819-2.819c0.391-0.391,0.391-1.023,0-1.414c-0.391-0.391-1.023-0.391-1.414,0l-2.819,2.819  c-0.981-0.699-2.177-1.114-3.47-1.114c-1.293,0-2.489,0.415-3.469,1.114l-2.819-2.819c-0.391-0.391-1.024-0.391-1.414,0  c-0.391,0.391-0.391,1.023,0,1.414l2.819,2.818c-0.7,0.981-1.116,2.178-1.116,3.473c0,1.248,0.394,2.454,1.103,3.459  c-0.248,0.161-0.488,0.334-0.718,0.518L8,9.586V5c0-0.553-0.447-1-1-1C6.447,4,6,4.447,6,5v5c0,0.266,0.105,0.52,0.293,0.707  l3.682,3.682C9.354,15.165,8.864,16.046,8.525,17H4c-0.553,0-1,0.447-1,1v5c0,0.553,0.447,1,1,1c0.553,0,1-0.447,1-1v-4h3.059  C8.022,19.329,8,19.662,8,20c0,1.102,0.209,2.154,0.573,3.13L6.19,26.413C6.066,26.583,6,26.789,6,27v5c0,0.553,0.447,1,1,1  c0.553,0,1-0.447,1-1v-4.676l1.603-2.209C11.23,27.459,13.937,29,17,29c3.063,0,5.77-1.541,7.396-3.885L26,27.324V32  c0,0.553,0.447,1,1,1c0.553,0,1-0.447,1-1v-5c0-0.211-0.066-0.417-0.19-0.587l-2.382-3.283C25.791,22.154,26,21.102,26,20  c0-0.338-0.022-0.671-0.059-1H29v4c0,0.553,0.447,1,1,1c0.553,0,1-0.447,1-1v-5C31,17.447,30.553,17,30,17z M13.004,8.998  c0-1.101,0.447-2.099,1.169-2.822c0.002-0.002,0.005-0.003,0.007-0.005c0.002-0.002,0.002-0.004,0.004-0.006  c0.724-0.72,1.72-1.167,2.82-1.167c1.101,0,2.099,0.447,2.823,1.169c0.001,0.001,0.001,0.003,0.003,0.004  c0.001,0.001,0.003,0.002,0.005,0.003c0.722,0.724,1.17,1.722,1.17,2.824c0,0.948-0.347,1.843-0.94,2.55  C19.106,11.2,18.077,11,17,11c-1.074,0-2.099,0.199-3.055,0.545C13.351,10.831,13.004,9.938,13.004,8.998z M10,20  c0-3.519,2.614-6.432,6-6.92v13.84C12.614,26.432,10,23.519,10,20z M18,26.92V13.08c3.386,0.488,6,3.401,6,6.92  C24,23.519,21.386,26.432,18,26.92z"></path></svg>';
 
 
 
@@ -48,22 +70,28 @@ var NONE        = 4,
 
 
 var portals = [
+
   {
-    coords: {x:18, y:10},
-    directions: [RIGHT],
-    destination: {x:0, y:10},
+    coords: {x:11, y:0},
+    directions: [UP],
+    destination: {x:11, y:18},
     //newDirection: RIGHT,
-  },{
-    coords: {x:0, y:10},
-    directions: [LEFT],
-    destination: {x:19, y:10},
-    //newDirection: LEFT,
-  },{
-    coords: {x:6, y:12},
-    directions: [NONE],
-    destination: {x:6, y:20},
-    //newDirection: LEFT,
-  },
+  }, {
+    coords: {x:11, y:18},
+    directions: [DOWN],
+    destination: {x:11, y:0},
+    //newDirection: RIGHT,
+  }, {
+    coords: {x:31, y:0},
+    directions: [UP],
+    destination: {x:31, y:18},
+    //newDirection: RIGHT,
+  }, {
+    coords: {x:31, y:18},
+    directions: [DOWN],
+    destination: {x:31, y:0},
+    //newDirection: RIGHT,
+  }
 ];
 
 Pacman.FPS = 30;
@@ -123,7 +151,8 @@ Pacman.Ghost = function (game, map, colour) {
     function reset() {
         eaten = null;
         eatable = null;
-        position = {"x": 90, "y": 80};
+        //position = {"x": 90, "y": 80};
+        position = {x:210, y:70};
         direction = getRandomDirection();
         due = getRandomDirection();
     };
@@ -205,6 +234,33 @@ Pacman.Ghost = function (game, map, colour) {
         var high = game.getTick() % 10 > 5 ? 3  : -3;
         var low  = game.getTick() % 10 > 5 ? -3 : 3;
 
+        var pxm = left;
+        var pym = top;
+
+
+
+        // Create a DOMParser, load XML, parse it, get SVG item, get elems with class "drawElement", change their colors
+        var parser = new DOMParser();
+        var xmlDoc = parser.parseFromString(ghostSvgSprite, "text/xml");
+        var svg = xmlDoc.getElementsByTagName('svg')[0];
+        var paths = svg.getElementsByTagName("path");
+        for (var i = 0; i < paths.length; i++) {
+          paths[i].style.fill = getColour();
+        }
+        // Transform SVG into base64 data
+        var xml = new XMLSerializer().serializeToString(svg);
+        var svg64 = btoa(xml);
+        var b64Start = 'data:image/svg+xml;base64,';
+        var image64 = b64Start + svg64;
+
+        // Create image object using the base64 data
+        var ghost = new Image();
+        ghost.src = image64;
+
+        // Draw image object
+        ctx.drawImage(ghost, pxm, pym, s, s);
+
+        /*
         ctx.fillStyle = getColour();
         ctx.beginPath();
 
@@ -245,17 +301,42 @@ Pacman.Ghost = function (game, map, colour) {
                 s / 15, 0, 300, false);
         ctx.closePath();
         ctx.fill();
+        */
 
     };
 
     function pane(pos) {
-
+        /*
         if (pos.y === 100 && pos.x >= 190 && direction === RIGHT) {
             return {"y": 100, "x": -10};
         }
 
         if (pos.y === 100 && pos.x <= -10 && direction === LEFT) {
             return position = {"y": 100, "x": 190};
+        }
+        */
+        blockSize = map.blockSize;
+
+        for (i = 0; i < portals.length; i += 1) {
+          portal = portals[i];
+          px = (portal.coords.x * 10);
+          py = (portal.coords.y * 10);
+          if (
+            pos.y >= py-5 &&
+            pos.y <= py+5 &&
+            pos.x >= px-5 &&
+            pos.x <= px+5 &&
+            (
+              portal.directions.includes(NONE) ||
+              portal.directions.includes(direction)
+            )
+          ) {
+            pos = {
+              x: portal.destination.x * 10,
+              y: portal.destination.y * 10,
+            };
+            return pos;
+          }
         }
 
         return false;
@@ -367,7 +448,8 @@ Pacman.User = function (game, map) {
     };
 
     function resetPosition() {
-        position = {"x": 90, "y": 120};
+        //position = {"x": 90, "y": 120};
+        position = {x:210, y:110};
         direction = LEFT;
         due = LEFT;
     };
@@ -505,8 +587,7 @@ Pacman.User = function (game, map) {
             map.setBlock(nextWhole, Pacman.EMPTY);
             addScore((block === Pacman.BISCUIT) ? 10 : 50);
             eaten += 1;
-
-            if (eaten === 182) {
+            if (eaten === biscuitsToCompleteLevel) { // 182 | 357
                 game.completedLevel();
             }
 
@@ -540,7 +621,35 @@ Pacman.User = function (game, map) {
     };
 
     function drawDead(ctx, amount) {
+        var s     = map.blockSize;
+        var angle = calcAngle(direction, position);
 
+         // Pixel map coordinates in canvas to draw pacman
+        var pxm = ((position.x/10) * s) + s / 2 - s/2;
+        var pym = ((position.y/10) * s) + s / 2 - s/2;
+
+        var spriteStep = 0;
+        var spriteDirCoordsStepTicks = Pacman.FPS / 8;
+        var spriteDirCoordsStep = Math.floor((game.getTick() % (4 * spriteDirCoordsStepTicks)) / spriteDirCoordsStepTicks)
+        var spriteDirCoords = 0;
+        if (spriteDirCoordsStep === 0) {
+          spriteDirCoords = sprites.player.width * 0;
+        } else if (spriteDirCoordsStep === 1) {
+          spriteDirCoords = sprites.player.width * 3;
+        } else if (spriteDirCoordsStep === 2) {
+          spriteDirCoords = sprites.player.width * 2;
+        } else if (spriteDirCoordsStep === 3) {
+          spriteDirCoords = sprites.player.width * 1;
+        }
+
+        if (amount >= 1) {
+          spriteDirCoords = 0;
+        }
+
+        ctx.drawImage(sprites.player.img, spriteDirCoords, sprites.player.height * spriteStep, sprites.player.width, sprites.player.height, pxm, pym, s, s);
+        //console.log(spriteDirCoordsStep);
+
+        /*
         var size = map.blockSize,
             half = size / 2;
 
@@ -558,10 +667,47 @@ Pacman.User = function (game, map) {
                 half, 0, Math.PI * 2 * amount, true);
 
         ctx.fill();
+        */
     };
 
-    function draw(ctx) {
 
+    function draw(ctx) { // draw pacman
+        var s     = map.blockSize;
+        var angle = calcAngle(direction, position);
+
+         // Pixel map coordinates in canvas to draw pacman
+        var pxm = ((position.x/10) * s) + s / 2 - s/2;
+        var pym = ((position.y/10) * s) + s / 2 - s/2;
+
+        // Calc sprite step
+        var spriteSteps = sprites.player.steps;
+        var spriteCicleDurationSeconds = sprites.player.cicleDurationSeconds;
+        var spriteCicleDurationTicks = Pacman.FPS * spriteCicleDurationSeconds;
+        var spriteStepDurationTicks = spriteCicleDurationTicks / spriteSteps;
+        var spriteCicleTick = (game.getTick() % (spriteCicleDurationTicks));
+        var spriteStep = Math.floor(spriteCicleTick / spriteStepDurationTicks);
+
+        // Sprite direction coordinated in image
+        var spriteDirCoords = sprites.player.width * 0;
+        if (direction === DOWN) {
+          spriteDirCoords = sprites.player.width * 0;
+        } else if (direction === UP) {
+          spriteDirCoords = sprites.player.width * 1;
+        } else if (direction === LEFT) {
+          spriteDirCoords = sprites.player.width * 2;
+        } else if (direction === RIGHT) {
+          spriteDirCoords = sprites.player.width * 3;
+        } else {
+          spriteDirCoords = sprites.player.width * 0;
+          spriteStep = 0;
+        }
+
+        // Draw
+        ctx.drawImage(sprites.player.img, spriteDirCoords, sprites.player.height * spriteStep, sprites.player.width, sprites.player.height, pxm, pym, s, s);
+
+
+        // Original draw pacman
+        /*
         var s     = map.blockSize,
             angle = calcAngle(direction, position);
 
@@ -578,6 +724,7 @@ Pacman.User = function (game, map) {
                 Math.PI * angle.end, angle.direction);
 
         ctx.fill();
+        */
     };
 
     initUser();
@@ -725,6 +872,7 @@ Pacman.Map = function (size) {
             ctx.stroke();
 
             // Draw portal path
+            /*
             var gradient = ctx.createLinearGradient(pcxm, pcym, pdxm, pdym);
             gradient.addColorStop("0", "magenta");
             gradient.addColorStop("0.8", "blue");
@@ -738,6 +886,7 @@ Pacman.Map = function (size) {
             ctx.lineTo(pdxm, pdym);
             ctx.closePath();
             ctx.stroke();
+            */
         }
       }
     };
@@ -973,7 +1122,26 @@ var PACMAN = (function () {
         user.loseLife();
         if (user.getLives() > 0) {
             startLevel();
+        } else {
+            submitScore();
         }
+    }
+
+    function submitScore() {
+      function http_build_params( obj ) { // https://stackoverflow.com/a/18116302/4114225
+        return '?'+Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
+      }
+
+      var submitData = {
+        "uid" : 1,
+        "score" : user.theScore(),
+      };
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "POST", "api/score.php", false ); // false for synchronous request
+      xmlHttp.send( http_build_params(submitData) );
+      console.log(xmlHttp.responseText);
+
+      console.log("Score:", user.theScore());
     }
 
     function setState(nState) {
@@ -997,6 +1165,12 @@ var PACMAN = (function () {
         ctx.fillStyle = "#FFFF00"; //custom: ?
 
         for (var i = 0, len = user.getLives(); i < len; i++) {
+            s = map.blockSize;
+
+            ctx.drawImage(sprites.player.img, 0, 21, 15, 21, 150 + (25 * i) + map.blockSize / 2 - s/2, (topLeft+1) + map.blockSize / 2 - s/2, s, s);
+
+            // Original code
+            /*
             ctx.fillStyle = colors.lifes;
             ctx.beginPath();
             ctx.moveTo(150 + (25 * i) + map.blockSize / 2,
@@ -1006,6 +1180,7 @@ var PACMAN = (function () {
                     (topLeft+1) + map.blockSize / 2,
                     map.blockSize / 2, Math.PI * 0.25, Math.PI * 1.75, false);
             ctx.fill();
+            */
         }
 
         ctx.fillStyle = !soundDisabled() ? "#00FF00" : "#FF0000"; //custom: enabled-disabled color
@@ -1100,7 +1275,7 @@ var PACMAN = (function () {
             }
         } else if (state === COUNTDOWN) {
 
-            diff = 5 + Math.floor((timerStart - tick) / Pacman.FPS);
+            diff = startGameCountdown + Math.floor((timerStart - tick) / Pacman.FPS);
 
             if (diff === 0) {
                 map.draw(ctx);
@@ -1130,6 +1305,11 @@ var PACMAN = (function () {
         setState(WAITING);
         level += 1;
         map.reset();
+
+        var speedMultiplier = speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
+        clearInterval(timer);
+        timer = window.setInterval(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
+
         user.newLevel();
         startLevel();
     };
@@ -1141,14 +1321,14 @@ var PACMAN = (function () {
         }
     };
 
-    function init(wrapper, root) {
+    function init(wrapper) {
 
         var i, len, ghost,
-            blockSize = wrapper.offsetWidth / 19,
+            blockSize = wrapper.offsetWidth / Pacman.MAP[0].length, // wrapper.offsetWidth / Pacman.MAP[0].length
             canvas    = document.createElement("canvas");
 
-        canvas.setAttribute("width", (blockSize * 19) + "px");
-        canvas.setAttribute("height", (blockSize * 22) + 30 + "px");
+        canvas.setAttribute("width", (blockSize * Pacman.MAP[0].length) + "px");
+        canvas.setAttribute("height", (blockSize * Pacman.MAP.length) + 30 + "px");
 
         wrapper.appendChild(canvas);
 
@@ -1158,7 +1338,8 @@ var PACMAN = (function () {
         map   = new Pacman.Map(blockSize);
         user  = new Pacman.User({
             "completedLevel" : completedLevel,
-            "eatenPill"      : eatenPill
+            "eatenPill"      : eatenPill,
+            "getTick"        : getTick
         }, map);
 
         for (i = 0, len = ghostSpecs.length; i < len; i += 1) {
@@ -1172,12 +1353,12 @@ var PACMAN = (function () {
         var extension = Modernizr.audio.ogg ? 'ogg' : 'mp3';
 
         var audio_files = [
-            ["start", root + "audio/opening_song." + extension],
-            ["die", root + "audio/die." + extension],
-            ["eatghost", root + "audio/eatghost." + extension],
-            ["eatpill", root + "audio/eatpill." + extension],
-            ["eating", root + "audio/eating.short." + extension],
-            ["eating2", root + "audio/eating.short." + extension]
+            ["start", "audio/opening_song." + extension],
+            ["die", "audio/die." + extension],
+            ["eatghost", "audio/eatghost." + extension],
+            ["eatpill", "audio/eatpill." + extension],
+            ["eating", "audio/eating.short." + extension],
+            ["eating2", "audio/eating.short." + extension]
         ];
 
         load(audio_files, function() { loaded(); });
@@ -1200,7 +1381,11 @@ var PACMAN = (function () {
         document.addEventListener("keydown", keyDown, true);
         document.addEventListener("keypress", keyPress, true);
 
-        timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
+        mainLoop();
+        //timer = window.setInterval(mainLoop, 1000 / Pacman.FPS / speedMultiplier);
+
+        var speedMultiplier = speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
+        timer = window.setInterval(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
     };
 
     return {
@@ -1239,16 +1424,16 @@ Pacman.PILL    = 4;
 
 Pacman.MAP = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 1, 1, 1, 0, 4, 1, 1, 0, 2, 0, 2, 0, 2, 0, 1, 1, 1, 1, 4, 1, 0, 1, 4, 1, 1, 1, 1, 0, 2, 0, 2, 0, 2, 0, 1, 1, 4, 0, 1, 1, 1, 0],
+  [0, 1, 1, 1, 0, 4, 1, 1, 0, 2, 0, 2, 0, 2, 0, 1, 1, 1, 1, 4, 1, 0, 1, 4, 1, 1, 1, 1, 0, 2, 0, 2, 0, 2, 0, 1, 1, 4, 0, 1, 1, 1, 0],
   [0, 1, 0, 1, 1, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 1, 0, 1, 1, 1, 0, 1, 0],
   [0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0],
   [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
   [0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0],
   [0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0],
   [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-  [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 0, 1, 1, 0, 0, 3, 0, 0, 1, 1, 0, 1, 1, 1, 0, 2, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0],
-  [0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 1, 0, 3, 3, 3, 0, 1, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
-  [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 2, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0],
+  [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 0, 1, 0, 0, 0, 3, 0, 0, 0, 1, 0, 1, 1, 1, 0, 2, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0],
+  [0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 3, 3, 3, 3, 3, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
+  [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 2, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0],
   [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
   [0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0],
   [0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0],
@@ -1260,7 +1445,153 @@ Pacman.MAP = [
 ];
 
 Pacman.WALLS = [
+  [
+    {"move": [10.5, 0]}, {"line": [10.5, 3]},
+    {"curve": [10.5, 3.5, 10, 3.5]}, {"line": [9, 3.5]},
+    {"curve": [8.5, 3.5, 8.5, 3]}, {"line": [8.5, 1]},
+    {"curve": [8.5, 0.5, 8, 0.5]}, {"line": [5, 0.5]},
+    {"curve": [4.5, 0.5, 4.5, 1]}, {"line": [4.5, 2]}, {"line": [4.5, 1]},
+    {"curve": [4.5, 0.5, 4, 0.5]}, {"line": [1, 0.5]},
+    {"curve": [0.5, 0.5, 0.5, 1]}, {"line": [0.5, 18]},
+    {"curve": [0.5, 18.5, 1, 18.5]}, {"line": [4, 18.5]},
+    {"curve": [4.5, 18.5, 4.5, 18]}, {"line": [4.5, 17]}, {"line": [4.5, 18]},
+    {"curve": [4.5, 18.5, 5, 18.5]}, {"line": [8, 18.5]},
+    {"curve": [8.5, 18.5, 8.5, 18]}, {"line": [8.5, 16]},
+    {"curve": [8.5, 15.5, 9, 15.5]}, {"line": [10, 15.5]},
+    {"curve": [10.5, 15.5, 10.5, 16]}, {"line": [10.5, 19]},
+  ], [
+    {"move": [12.5, 19]}, {"line": [12.5, 16]},
+    {"curve": [12.5, 15.5, 13, 15.5]}, {"line": [14, 15.5]},
+    {"curve": [14.5, 15.5, 14.5, 16]}, {"line": [14.5, 18]},
+    {"curve": [14.5, 18.5, 15, 18.5]}, {"line": [21, 18.5]},
+    {"curve": [21.5, 18.5, 21.5, 18]}, {"line": [21.5, 15.5]}, {"line": [21.5, 18]},
+    {"curve": [21.5, 18.5, 22, 18.5]}, {"line": [28, 18.5]},
+    {"curve": [28.5, 18.5, 28.5, 18]}, {"line": [28.5, 16]},
+    {"curve": [28.5, 15.5, 29, 15.5]}, {"line": [30, 15.5]},
+    {"curve": [30.5, 15.5, 30.5, 16]}, {"line": [30.5, 19]},
+  ], [
+    {"move": [32.5, 19]}, {"line": [32.5, 16]},
+    {"curve": [32.5, 15.5, 33, 15.5]}, {"line": [34, 15.5]},
+    {"curve": [34.5, 15.5, 34.5, 16]}, {"line": [34.5, 18]},
+    {"curve": [34.5, 18.5, 35, 18.5]}, {"line": [38, 18.5]},
+    {"curve": [38.5, 18.5, 38.5, 18]}, {"line": [38.5, 17]}, {"line": [38.5, 18]},
+    {"curve": [38.5, 18.5, 39, 18.5]}, {"line": [42, 18.5]},
+    {"curve": [42.5, 18.5, 42.5, 18]}, {"line": [42.5, 1]},
+    {"curve": [42.5, 0.5, 42, 0.5]}, {"line": [39, 0.5]},
+    {"curve": [38.5, 0.5, 38.5, 1]}, {"line": [38.5, 2]}, {"line": [38.5, 1]},
+    {"curve": [38.5, 0.5, 38, 0.5]}, {"line": [35, 0.5]},
+    {"curve": [34.5, 0.5, 34.5, 1]}, {"line": [34.5, 3]},
+    {"curve": [34.5, 3.5, 34, 3.5]}, {"line": [33, 3.5]},
+    {"curve": [32.5, 3.5, 32.5, 3]}, {"line": [32.5, 0]},
+  ], [
+    {"move": [30.5, 0]}, {"line": [30.5, 3]},
+    {"curve": [30.5, 3.5, 30, 3.5]}, {"line": [29, 3.5]},
+    {"curve": [28.5, 3.5, 28.5, 3]}, {"line": [28.5, 1]},
+    {"curve": [28.5, 0.5, 28, 0.5]}, {"line": [22, 0.5]},
+    {"curve": [21.5, 0.5, 21.5, 1]}, {"line": [21.5, 3.5]}, {"line": [21.5, 1]},
+    {"curve": [21.5, 0.5, 21, 0.5]}, {"line": [15, 0.5]},
+    {"curve": [14.5, 0.5, 14.5, 1]}, {"line": [14.5, 3]},
+    {"curve": [14.5, 3.5, 14, 3.5]}, {"line": [13, 3.5]},
+    {"curve": [12.5, 3.5, 12.5, 3]}, {"line": [12.5, 0]},
+  ], [
+    {"move": [6.5, 2.5]}, {"line": [6.5, 3]},
+    {"curve": [6.5, 3.5, 6, 3.5]}, {"line": [4.5, 3.5]},
+  ], [
+    {"move": [6.5, 16.5]}, {"line": [6.5, 16]},
+    {"curve": [6.5, 15.5, 6, 15.5]}, {"line": [4.5, 15.5]},
+  ], [
+    {"move": [6.5, 5.5]}, {"line": [6.5, 7.5]},
+  ], [
+    {"move": [6.5, 11.5]}, {"line": [6.5, 13.5]},
+  ], [
+    {"move": [2.5, 2.5]}, {"line": [2.5, 5]},
+    {"curve": [2.5, 5.5, 3, 5.5]}, {"line": [4.5, 5.5]}, {"line": [3, 5.5]},
+    {"curve": [2.5, 5.5, 2.5, 6]}, {"line": [2.5, 7.5]},
+  ], [
+    {"move": [2.5, 11.5]}, {"line": [2.5, 13]},
+    {"curve": [2.5, 13.5, 3, 13.5]}, {"line": [4.5, 13.5]}, {"line": [3, 13.5]},
+    {"curve": [2.5, 13.5, 2.5, 14]}, {"line": [2.5, 16.5]},
+  ], [
+    {"move": [2.5, 9.5]}, {"line": [4.5, 9.5]}, {"line": [4.5, 7.5]}, {"line": [4.5, 11.5]},
+  ], [
+    {"move": [6.5, 9.5]}, {"line": [8.5, 9.5]}, {"line": [8.5, 7.5]}, {"line": [8.5, 11.5]},
+  ], [
+    {"move": [8.5, 5.5]}, {"line": [10.5, 5.5]},
+  ], [
+    {"move": [12.5, 5.5]}, {"line": [16.5, 5.5]}, {"move": [14.5, 5.5]}, {"line": [14.5, 7.5]},
+  ], [
+    {"move": [8.5, 13.5]}, {"line": [10.5, 13.5]},
+  ], [
+    {"move": [10.5, 7.5]}, {"line": [10.5, 11.5]}, {"line": [12.5, 11.5]}, {"line": [12.5, 7.5]}, {"line": [10.5, 7.5]},
+  ], [
+    {"move": [12.5, 13.5]}, {"line": [16.5, 13.5]}, {"move": [14.5, 13.5]}, {"line": [14.5, 11.5]},
+  ], [
+    {"move": [16.5, 7.5]}, {"line": [16.5, 11.5]}, {"move": [16.5, 9.5]}, {"line": [14.5, 9.5]},
+  ], [
+    {"move": [16.5, 15.5]}, {"line": [16.5, 16.5]},
+  ], [
+    {"move": [16.5, 2.5]}, {"line": [16.5, 3.5]},
+  ], [
+    {"move": [18.5, 2.5]}, {"line": [18.5, 3.5]}, {"line": [19.5, 3.5]}, {"line": [19.5, 2.5]}, {"line": [18.5, 2.5]},
+  ], [
+    {"move": [18.5, 5.5]}, {"line": [18.5, 6.5]}, {"line": [19.5, 6.5]}, {"line": [19.5, 5.5]}, {"line": [18.5, 5.5]},
+  ], [
+    {"move": [18.5, 12.5]}, {"line": [18.5, 13.5]}, {"line": [19.5, 13.5]}, {"line": [19.5, 12.5]}, {"line": [18.5, 12.5]},
+  ], [
+    {"move": [18.5, 15.5]}, {"line": [18.5, 16.5]}, {"line": [19.5, 16.5]}, {"line": [19.5, 15.5]}, {"line": [18.5, 15.5]},
+  ], [
+    {"move": [23.5, 2.5]}, {"line": [23.5, 3.5]}, {"line": [24.5, 3.5]}, {"line": [24.5, 2.5]}, {"line": [23.5, 2.5]},
+  ], [
+    {"move": [23.5, 5.5]}, {"line": [23.5, 6.5]}, {"line": [24.5, 6.5]}, {"line": [24.5, 5.5]}, {"line": [23.5, 5.5]},
+  ], [
+    {"move": [23.5, 12.5]}, {"line": [23.5, 13.5]}, {"line": [24.5, 13.5]}, {"line": [24.5, 12.5]}, {"line": [23.5, 12.5]},
+  ], [
+    {"move": [23.5, 15.5]}, {"line": [23.5, 16.5]}, {"line": [24.5, 16.5]}, {"line": [24.5, 15.5]}, {"line": [23.5, 15.5]},
+  ], [
+    {"move": [30.5, 7.5]}, {"line": [30.5, 11.5]}, {"line": [32.5, 11.5]}, {"line": [32.5, 7.5]}, {"line": [30.5, 7.5]},
+  ], [
+    {"move": [20.5, 8.5]}, {"line": [18.5, 8.5]}, {"line": [18.5, 10.5]}, {"line": [24.5, 10.5]}, {"line": [24.5, 8.5]}, {"line": [22.5, 8.5]},
+  ], [
+    {"move": [21.5, 5.5]}, {"line": [21.5, 6.5]},
+  ], [
+    {"move": [26.5, 2.5]}, {"line": [26.5, 3.5]},
+  ], [
+    {"move": [26.5, 15.5]}, {"line": [26.5, 16.5]},
+  ], [
+    {"move": [26.5, 5.5]}, {"line": [30.5, 5.5]}, {"move": [28.5, 5.5]}, {"line": [28.5, 7.5]},
+  ], [
+    {"move": [26.5, 7.5]}, {"line": [26.5, 11.5]}, {"move": [26.5, 9.5]}, {"line": [28.5, 9.5]},
+  ], [
+    {"move": [26.5, 13.5]}, {"line": [30.5, 13.5]}, {"move": [28.5, 13.5]}, {"line": [28.5, 11.5]},
+  ], [
+    {"move": [32.5, 5.5]}, {"line": [34.5, 5.5]},
+  ], [
+    {"move": [32.5, 13.5]}, {"line": [34.5, 13.5]},
+  ], [
+    {"move": [34.5, 7.5]}, {"line": [34.5, 11.5]}, {"move": [34.5, 9.5]}, {"line": [36.5, 9.5]},
+  ], [
+    {"move": [38.5, 7.5]}, {"line": [38.5, 11.5]}, {"move": [38.5, 9.5]}, {"line": [40.5, 9.5]},
+  ], [
+    {"move": [40.5, 2.5]}, {"line": [40.5, 7.5]}, {"move": [40.5, 5.5]}, {"line": [38.5, 5.5]},
+  ], [
+    {"move": [40.5, 11.5]}, {"line": [40.5, 16.5]}, {"move": [40.5, 13.5]}, {"line": [38.5, 13.5]},
+  ],
 
+
+
+
+  [
+    {"move": [36.5, 2.5]}, {"line": [36.5, 3]},
+    {"curve": [36.5, 3.5, 37, 3.5]}, {"line": [38.5, 3.5]},
+  ], [
+    {"move": [36.5, 16.5]}, {"line": [36.5, 16]},
+    {"curve": [36.5, 15.5, 37, 15.5]}, {"line": [38.5, 15.5]},
+  ], [
+    {"move": [36.5, 5.5]}, {"line": [36.5, 7.5]},
+  ], [
+    {"move": [36.5, 11.5]}, {"line": [36.5, 13.5]},
+  ],
+/*
     [{"move": [0, 9.5]}, {"line": [3, 9.5]},
      {"curve": [3.5, 9.5, 3.5, 9]}, {"line": [3.5, 8]},
      {"curve": [3.5, 7.5, 3, 7.5]}, {"line": [1, 7.5]},
@@ -1362,6 +1693,7 @@ Pacman.WALLS = [
      {"line": [11, 11.5]}, {"curve": [11.5, 11.5, 11.5, 11]},
      {"line": [11.5, 10]}, {"curve": [11.5, 9.5, 11, 9.5]},
      {"line": [10.5, 9.5]}]
+*/
 ];
 
 Object.prototype.clone = function () {
@@ -1384,7 +1716,7 @@ $(function(){
 
   if (Modernizr.canvas && Modernizr.localstorage &&
       Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
-    window.setTimeout(function () { PACMAN.init(el, "https://raw.githubusercontent.com/daleharvey/pacman/master/"); }, 0);
+    window.setTimeout(function () { PACMAN.init(el); }, 0);
   } else {
     el.innerHTML = "<p>Sorry, needs a decent browser</p><br /><small>" +
       "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
