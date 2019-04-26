@@ -7,8 +7,8 @@ $db->exec("
   CREATE TABLE `Person` (
     `uid` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(32) NOT NULL,
-    `surname` varchar(11) NOT NULL,
-    `email` int(11) NOT NULL,
+    `surname` varchar(64) NOT NULL,
+    `email` varchar(320) NOT NULL,
     PRIMARY KEY (`uid`)
   )
 ");
