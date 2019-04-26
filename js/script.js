@@ -1696,6 +1696,7 @@ Pacman.WALLS = [
 */
 ];
 
+/*
 Object.prototype.clone = function () {
     var i, newObj = (this instanceof Array) ? [] : {};
     for (i in this) {
@@ -1710,10 +1711,11 @@ Object.prototype.clone = function () {
     }
     return newObj;
 };
+*/
 
-$(function(){
+function displayPacmanGame() {
   var el = document.getElementById("pacman");
-
+  el.style.display = 'block';
   var decentBrowser = Modernizr.canvas && Modernizr.localstorage &&
       Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3);
   if (decentBrowser) {
@@ -1722,4 +1724,35 @@ $(function(){
     el.innerHTML = "<p>Sorry, needs a decent browser</p><br /><small>" +
       "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
   }
+}
+
+
+$(function(){
+  $('#formularioform').on("submit", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $.ajax({
+      url: "api/form.php",
+      type: "post",
+      data: {
+        "a": 1,
+        "b": 2,
+      },
+      dataType: "json",
+      success: function(result, status, xhr) {
+        console.log(result);
+        if (result['status'] === "ok") {
+          // hide form
+          //displayPacmanGame();
+        } else {
+          alert(error);
+        }
+      },
+      error: function(xhr, status, error) {
+
+      }
+    });
+    return false;
+  });
+
 });
