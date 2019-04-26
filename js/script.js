@@ -1714,9 +1714,10 @@ Object.prototype.clone = function () {
 $(function(){
   var el = document.getElementById("pacman");
 
-  if (Modernizr.canvas && Modernizr.localstorage &&
-      Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
-    window.setTimeout(function () { PACMAN.init(el); }, 0);
+  var decentBrowser = Modernizr.canvas && Modernizr.localstorage &&
+      Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3);
+  if (decentBrowser) {
+    //window.setTimeout(function () { PACMAN.init(el); }, 0);
   } else {
     el.innerHTML = "<p>Sorry, needs a decent browser</p><br /><small>" +
       "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
