@@ -3,9 +3,6 @@
 require_once(__DIR__.'/db.php');
 header('Content-Type: application/json; charset=utf-8');
 
-echo json_encode(['status' => 'error', 'errors' => "Not implemented"]);
-exit();
-
 if ( empty($_GET['uid']) || !filter_var($_GET['uid'], FILTER_VALIDATE_INT, ['options'=>['min_range'=>0]]) ) {
   echo json_encode(['status' => 'error', 'errors' => "Empty or invalid uid"]);
   exit();
