@@ -9,15 +9,57 @@
   <link rel="icon" href="img/cropped-mrH-32x32.png" sizes="32x32" />
 </head>
 <body>
-  <div id="logo">
+  <div id="logo" style="display:none">
     <a href="https://mrhouston.net/" target="_blank"><img src="img/logo_mrHouston_CMYK.png" alt="Mr. Houston logo"/></a>
   </div>
 <div id="shim">shim for font face</div> <!--Esto parece que no sirve para nada-->
     <h1>We've had a problem here</h1>
-
-
-<!--<p><a href="https://github.com/daleharvey/pacman" target="_blank">Credits: https://github.com/daleharvey/pacman</a></p>
--->
-<div id="pacman"></div>
+    <div id="formulario">
+      <form method="POST" action="api/form.php">
+        <fieldset>
+          <legend>
+            <h2>Introduzca sus datos:</h2>
+          </legend>
+          <div class="field required">
+            <label id="nombre"> Nombre: </label>
+            <input type="text" name="nombre" required />
+          </div>
+          <div class="field required">
+            <label id="apellidos"> Apellidos: </label>
+            <input type="text" name="apellidos" required />
+          </div>
+          <br/>
+          <div class="field required">
+            <label id="nick"> Nick: </label>
+            <input type="text" name="nick" required />
+          </div>
+          <br/>
+          <div class="field required">
+            <label id="email"> Email: </label>
+            <input type="text" name="email" required />
+          </div>
+          <br/>
+          <div class="field">
+            <label id="twitter"> Twitter: </label>
+            <input type="text" name="twitter" />
+          </div>
+          <br/>
+          <div class="field required">
+            <label id="empresa"> Empresa: </label>
+            <input type="text" name="empresa" required />
+          </div>
+          <br/>
+          <div class="field required">
+            <label id="cargo"> Cargo: </label>
+            <input type="text" name="cargo" required />
+          </div>
+          <br/>
+          <input type="checkbox" name="comunicados" required> Autorizo a recibir comunicados.</input><br/>
+          <input type="checkbox" name="condiciones" required> Acepto los términos y condiciones.</input><br/>
+          <input type="submit" id="enviar" value="¡JUGAR!"/><br/>
+        </fieldset>
+      </form>
+    </div>
+    <div id="pacman"></div>
 </body>
 <html>
