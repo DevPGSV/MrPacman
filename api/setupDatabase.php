@@ -29,3 +29,7 @@ $db->exec("
     CONSTRAINT `Scores_ibfk_1` FOREIGN KEY (`person_uid`) REFERENCES `Person` (`uid`)
   )
 ");
+
+$stmt = $db->prepare("INSERT INTO Person (uid, nombre, apellidos, nick, email, empresa, cargo, comunicados, condiciones)
+  VALUES(1, 'Anonymous', 'Anonymous', 'Anonymous', '', '', '', false, false)");
+$r = $stmt->execute();
