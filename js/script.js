@@ -1709,7 +1709,7 @@ Pacman.WALLS = [
 */
 ];
 
-/*
+
 Object.prototype.clone = function () {
     var i, newObj = (this instanceof Array) ? [] : {};
     for (i in this) {
@@ -1724,7 +1724,6 @@ Object.prototype.clone = function () {
     }
     return newObj;
 };
-*/
 
 function displayPacmanGame() {
   var el = document.getElementById("pacman");
@@ -1732,7 +1731,7 @@ function displayPacmanGame() {
   var decentBrowser = Modernizr.canvas && Modernizr.localstorage &&
       Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3);
   if (decentBrowser) {
-    //window.setTimeout(function () { PACMAN.init(el); }, 0);
+    window.setTimeout(function () { PACMAN.init(el); }, 0);
   } else {
     el.innerHTML = "<p>Sorry, needs a decent browser</p><br /><small>" +
       "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
@@ -1744,27 +1743,33 @@ $(function(){
   $('#formularioform').on("submit", function(e) {
     e.preventDefault();
     e.stopPropagation();
-    $.ajax({
-      url: "api/form.php",
-      type: "post",
-      data: {
-        "a": 1,
-        "b": 2,
-      },
-      dataType: "json",
-      success: function(result, status, xhr) {
-        console.log(result);
-        if (result['status'] === "ok") {
-          // hide form
-          //displayPacmanGame();
-        } else {
-          alert(error);
-        }
-      },
-      error: function(xhr, status, error) {
 
-      }
-    });
+    function http_build_params( obj ) { // https://stackoverflow.com/a/18116302/4114225
+      return '?'+Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
+    }
+
+    var submitData = {
+      "nombre": document.getElementById("nombre").value,
+      "apellidos": document.getElementById("apellidos").value,
+      "nick": document.getElementById("nick").value,
+      "email": document.getElementById("email").value,
+      "twitter": document.getElementById("twitter").value,
+      "empresa": document.getElementById("empresa").value,
+      "cargo": document.getElementById("cargo").value,
+      "comunicados": document.getElementById("comunicados").value,
+      "condiciones": document.getElementById("condiciones").value,
+    };
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "POST", "api/form.php", false ); // false for synchronous request
+    xmlHttp.send( http_build_params(submitData) );
+    var result = JSON.parse(xmlHttp.responseText);
+    result['status'] = "ok";
+    if (result['status'] === "ok") {
+      $('#formulario').hide();
+      displayPacmanGame();
+    } else {
+      alert(result['errors']);
+    }
     return false;
   });
 
