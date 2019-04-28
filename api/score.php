@@ -15,9 +15,9 @@ if ( empty($_GET['score']) || !filter_var($_GET['score'], FILTER_VALIDATE_INT, [
 $uid = $_GET['uid'];
 $score = $_GET['score'];
 
-$stmt = $db->prepare("INSERT INTO scores VALUES(:id, :score, :timestamp)");
-$stmt->bindValue(':name', $uid, PDO::PARAM_INT);
-$stmt->bindValue(':score', $score, PDO::PARAM_INT);
+$stmt = $db->prepare("INSERT INTO Scores VALUES(:person_uid, :score, :timestamp)");
+$stmt->bindValue(':person_uid', $score, PDO::PARAM_INT);
+$stmt->bindValue(':score', $uid, PDO::PARAM_INT);
 $stmt->bindValue(':timestamp', time(), PDO::PARAM_INT);
 $r = $stmt->execute();
 
