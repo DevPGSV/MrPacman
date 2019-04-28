@@ -1,0 +1,45 @@
+<?php
+
+require_once(__DIR__.'/api/db.php');
+
+$stmt = $db->query("
+  SELECT DISTINCT Person.uid, MAX(Scores.score)
+  FROM Scores JOIN Person ON Scores.person_uid = Person.uid
+  GROUP BY Person.uid
+");
+$scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?><html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Permanent+Marker" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="js/script.js"></script>
+  <link rel="icon" href="img/cropped-mrH-32x32.png" sizes="32x32" />
+</head>
+<body>
+  <div id="logo">
+    <a href="https://mrhouston.net/" target="_blank"><img src="img/logo_mrHoustonblanco.png" alt="Mr. Houston logo"/></a>
+  </div>
+    <h1>We've had a problem here</h1>
+    <div id="ranking">
+    <table class="ranking">
+      <tr>
+        <th id="posicion">Posición</th>
+        <th>Nickname</th>
+        <th>Puntuación</th>
+      </tr>
+      <?php
+      foreach ($scores as $score) {
+        echo "<tr>\n";
+        echo "  <td>{$score['uid']}</td>\n";
+        echo "  <td>{$score['nombre']}</td>\n";
+        echo "  <td>{$score['score']}</td>\n";
+        echo "</tr>\n";
+      }
+      ?>
+      </table>
+    </div>
+</body>
+<html>
