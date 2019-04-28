@@ -6,9 +6,15 @@ header('Content-Type: application/json; charset=utf-8');
 $db->exec("
   CREATE TABLE `Person` (
     `uid` int(11) NOT NULL AUTO_INCREMENT,
-    `name` varchar(32) NOT NULL,
-    `surname` varchar(64) NOT NULL,
-    `email` varchar(320) NOT NULL,
+    `nombre` varchar(32) NOT NULL,
+    `apellidos` varchar(64) NOT NULL,
+    `nick` varchar(32) NOT NULL,
+    `email` varchar(128) NOT NULL,
+    `twitter` varchar(32),
+    `empresa` varchar(64) NOT NULL,
+    `cargo` varchar(64) NOT NULL,
+    `comunicados` TINYINT NOT NULL,
+    `condiciones` TINYINT NOT NULL,
     PRIMARY KEY (`uid`)
   )
 ");
