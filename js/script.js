@@ -8,6 +8,9 @@
  * do proper ghost mechanics (blinky/wimpy etc)
  */
 
+var userUid = -1;
+
+
 var speedBaseMultiplier = 1;
 var speedLevelMultiplier = 0.2; // speed: speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
 var startGameCountdown = 3;
@@ -1144,7 +1147,7 @@ var PACMAN = (function () {
       }
 
       var submitData = {
-        "uid" : 1,
+        "uid" : userUid,
         "score" : user.theScore(),
       };
       var xmlHttp = new XMLHttpRequest();
@@ -1726,6 +1729,7 @@ Object.prototype.clone = function () {
 };
 
 function displayPacmanGame() {
+  $('#formulario').hide();
   var el = document.getElementById("pacman");
   el.style.display = 'block';
   var decentBrowser = Modernizr.canvas && Modernizr.localstorage &&
@@ -1738,6 +1742,12 @@ function displayPacmanGame() {
   }
 }
 
+function displayForm() {
+  $('#pacman').hide();
+  $('#formulario').show();
+}
+
+
 
 $(function(){
   $('#formularioform').on("submit", function(e) {
@@ -1745,7 +1755,7 @@ $(function(){
     e.stopPropagation();
 
     function http_build_params( obj ) { // https://stackoverflow.com/a/18116302/4114225
-      return '?'+Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
+      return Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
     }
 
     var submitData = {
@@ -1761,11 +1771,11 @@ $(function(){
     };
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "POST", "api/form.php", false ); // false for synchronous request
+    xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xmlHttp.send( http_build_params(submitData) );
     var result = JSON.parse(xmlHttp.responseText);
-    result['status'] = "ok";
     if (result['status'] === "ok") {
-      $('#formulario').hide();
+      userUid = result['uid'];
       displayPacmanGame();
     } else {
       alert(result['errors']);
