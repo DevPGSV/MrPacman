@@ -23,9 +23,7 @@ body {
 
 img {
   padding: 1%;
-  background-color: white;
-  height: 74px;
-  width: 279px;
+  height: 85px;
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -37,6 +35,7 @@ h2 {
   margin-left: auto;
   margin-right: auto;
   width: 500px;
+  text-align: center;
 }
 
 h1 {
@@ -57,6 +56,25 @@ p, small, form {
   color: white;
 }
 
+.datosForm{
+  overflow: hidden;
+  margin-left: 30px;
+}
+
+.datosForm1{
+  float: left;
+  margin-right: auto;
+}
+
+.datosForm2{
+float: left;
+margin-left:90px;
+margin-right: auto;
+}
+
+.datosForm3{
+  margin-left: 30px;
+}
 
 #formulario{
   display: block;
@@ -66,6 +84,11 @@ p, small, form {
   width: 500px;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 10px;
+}
+
+fieldset{
+    padding: 3%;
 }
 
 #enviar{
@@ -84,7 +107,15 @@ p, small, form {
   background-color: #ED6E00;
   border: 2px solid #000000;
   font-weight: bold;
+}
 
+.ranking {
+  margin-top: 10px;
+  color: #FFFFFF;
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 fieldset{
@@ -97,13 +128,33 @@ fieldset{
 }
 #formulario .field input {
   margin-top: 1px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 #formulario .required:after {
   content: "*";
   display: inline;
   color: red;
+table, td, th{
+  border: 2px solid #FFFFFF;
 }
+
+table{
+    border-collapse: collapse;
+}
+
+#posicion{
+  width: 90px;
+}
+
+td{
+  height:25px;
+}
+
+th{
+  background-color: #ED6E00;
+   height: 35px;
+}
+
 /*a {
   text-decoration: none;
   color: #ED6E00;

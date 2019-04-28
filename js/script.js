@@ -34,6 +34,16 @@ var colors = {
 };
 colors.footerBackground = colors.background;
 
+var mrH = {
+  superPill: {
+    imgPath: 'img/mrH_pacman.png',
+    img: null,
+    height: 22,
+    width: 15,
+  }
+};
+mrH.superPill.img = new Image();
+mrH.superPill.img.src = mrH.superPill.imgPath;
 
 var sprites = {
   player: {
@@ -828,8 +838,8 @@ Pacman.Map = function (size) {
                 if (map[i][j] === Pacman.PILL) {
                     ctx.beginPath();
 
-                    ctx.fillStyle = colors.background;
-		                ctx.fillRect((j * blockSize), (i * blockSize),
+                   ctx.fillStyle = colors.background;
+		               ctx.fillRect((j * blockSize), (i * blockSize),
                                  blockSize, blockSize);
 
                     ctx.fillStyle = colors.pills;
@@ -838,6 +848,7 @@ Pacman.Map = function (size) {
                             Math.abs(5 - (pillSize/3)),
                             0,
                             Math.PI * 2, false);
+                  /*  ctx.drawImage(mrH.superPill.img, pxm, pym, s, s);*/
                     ctx.fill();
                     ctx.closePath();
                 }
@@ -1421,7 +1432,7 @@ Pacman.BISCUIT = 1;
 Pacman.EMPTY   = 2;
 Pacman.BLOCK   = 3;
 Pacman.PILL    = 4;
-
+/**ctx.drawImage(mrH.superPill.img, pxm, pym, s, s)= 4;**/
 Pacman.MAP = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 1, 1, 1, 0, 4, 1, 1, 0, 2, 0, 2, 0, 2, 0, 1, 1, 1, 1, 4, 1, 0, 1, 4, 1, 1, 1, 1, 0, 2, 0, 2, 0, 2, 0, 1, 1, 4, 0, 1, 1, 1, 0],
@@ -1553,6 +1564,8 @@ Pacman.WALLS = [
     {"move": [20.5, 8.5]}, {"line": [18.5, 8.5]}, {"line": [18.5, 10.5]}, {"line": [24.5, 10.5]}, {"line": [24.5, 8.5]}, {"line": [22.5, 8.5]},
   ], [
     {"move": [21.5, 5.5]}, {"line": [21.5, 6.5]},
+  ], [
+    {"move": [21.5, 12.5]}, {"line": [21.5, 13.5]},
   ], [
     {"move": [26.5, 2.5]}, {"line": [26.5, 3.5]},
   ], [

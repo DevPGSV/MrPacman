@@ -10,7 +10,7 @@
 </head>
 <body>
   <div id="logo">
-    <a href="https://mrhouston.net/" target="_blank"><img src="img/logo_mrHouston_CMYK.png" alt="Mr. Houston logo"/></a>
+    <a href="https://mrhouston.net/" target="_blank"><img src="img/logo_mrHoustonblanco.png" alt="Mr. Houston logo"/></a>
   </div>
     <h1>We've had a problem here</h1>
     <div id="formulario">
@@ -19,24 +19,54 @@
           <legend>
             <h2>Introduzca sus datos:</h2>
           </legend>
-        <label id="nombre"> Nombre: </label>
+          <div class="datosForm">
+            <div class="datosForm1">
+              <label id="nombre">Nombre: </label>
+              <br/>
+              <input type="text" name="nombre" />
+              <br/>
+              <br/>
+              <label id="apellidos">Apellidos: </label>
+              <br/>
+              <input type="text" name="apellidos" />
+              <br/>
+              <br/>
+              <label id="nick">Nickname: </label>
+              <br/>
+              <input type="text" name="nick" />
+              <br/>
+              <br/>
+              <label id="email">Email: </label>
+              <br/>
+              <input type="text" name="email" />
+              <br/>
+              <br/>
+            </div>
+            <div class="datosForm2">
+              <label id="Twitter">Twitter: </label>
+              <br/>
+              <input type="text" name="Twitter" />
+              <br/>
+              <br/>
+              <label id="Empresa">Empresa: </label>
+              <br/>
+              <input type="text" name="Empresa" />
+              <br/>
+              <br/>
+              <label id="Cargo">Cargo: </label>
+              <br/>
+              <input type="text" name="Cargo" />
+              <br/>
+              <br/>
+            </div>
+          </div>
+          <div class="datosForm3">
+        <input type="checkbox" name="comunicacion"> Acepto recibir comunicación comercial.</input>
         <br/>
-        <input type="text" name="nombre" />
-        <br/>
-        <br/>
-        <label id="apellidos"> Apellidos: </label>
-        <br/>
-        <input type="text" name="apellidos" />
-        <br/>
-        <br/>
-        <label id="email"> Email: </label>
-        <br/>
-        <input type="text" name="email" />
-        <br/>
-        <br/>
-        <input type="checkbox" name="condiciones"> Acepto los términos y condiciones.</input>
         <br/>
         <input type="submit" id="enviar" value="¡JUGAR!"/>
+      </div>
+
       </form>
     </div>
 </body>
