@@ -3,9 +3,10 @@
 require_once(__DIR__.'/api/db.php');
 
 $stmt = $db->query("
-  SELECT DISTINCT Person.uid, MAX(Scores.score)
+  SELECT DISTINCT Person.uid, Person.nombre, MAX(Scores.score) 'MaxScore'
   FROM Scores JOIN Person ON Scores.person_uid = Person.uid
   GROUP BY Person.uid
+  ORDER BY MaxScore DESC, Person.uid ASC
 ");
 $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?><html>
@@ -31,11 +32,13 @@ $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>Puntuación</th>
       </tr>
       <?php
+      $pos = 0;
       foreach ($scores as $score) {
+        $pos++;
         echo "<tr>\n";
-        echo "  <td>{$score['uid']}</td>\n";
+        echo "  <td>$pos</td>\n";
         echo "  <td>{$score['nombre']}</td>\n";
-        echo "  <td>{$score['score']}</td>\n";
+        echo "  <td>{$score['MaxScore']}</td>\n";
         echo "</tr>\n";
       }
       ?>
