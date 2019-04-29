@@ -19,6 +19,8 @@
           <legend>
             <h2>Introduzca sus datos:</h2>
           </legend>
+          <div class="datosForm">
+            <div class="datosForm1">
           <div class="field required">
             <label for="nombre"> Nombre: </label>
             <input type="text" id="nombre" name="nombre" required/>
@@ -35,6 +37,8 @@
             <label for="email"> Email: </label>
             <input type="text" id="email" name="email" required/>
           </div>
+          </div>
+          <div class="datosForm2">
           <div class="field">
             <label for="twitter"> Twitter: </label>
             <input type="text" id="twitter" name="twitter" />
@@ -47,9 +51,12 @@
             <label for="cargo"> Cargo: </label>
             <input type="text" id="cargo" name="cargo" required/>
           </div>
+          </div>
+          <div class="datosForm3">
           <input type="checkbox" id="comunicados" name="comunicados" required> Autorizo a recibir comunicados.</input><br/>
           <input type="checkbox" id="condiciones" name="condiciones" required> Acepto los términos y condiciones.</input><br/>
           <input type="submit" id="enviar" value="¡JUGAR!"/><br/>
+          </div>
         </fieldset>
         <button type="button" onclick="javascript:displayPacmanGame(1);" >Jugar sin formulario</button><br/>
       </form>

@@ -249,7 +249,7 @@ Pacman.Ghost = function (game, map, colour) {
 
 
 
-        // Create a DOMParser, load XML, parse it, get SVG item, get elems with class "drawElement", change their colors
+    /*    // Create a DOMParser, load XML, parse it, get SVG item, get elems with class "drawElement", change their colors
         var parser = new DOMParser();
         var xmlDoc = parser.parseFromString(ghostSvgSprite, "text/xml");
         var svg = xmlDoc.getElementsByTagName('svg')[0];
@@ -269,6 +269,8 @@ Pacman.Ghost = function (game, map, colour) {
 
         // Draw image object
         ctx.drawImage(ghost, pxm, pym, s, s);
+
+*/
 
         /*
         ctx.fillStyle = getColour();
