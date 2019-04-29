@@ -25,7 +25,7 @@ $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div id="logo">
     <a href="https://mrhouston.net/" target="_blank"><img src="img/logo_mrHoustonblanco.png" alt="Mr. Houston logo"/></a>
   </div>
-    <h1>We've had a problem here</h1>
+    <h1>We have a problem</h1>
     <div id="ranking">
     <table class="ranking">
       <tr>
