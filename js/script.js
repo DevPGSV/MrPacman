@@ -1811,7 +1811,6 @@ function displayForm() {
 
 
 $(function(){
-  displayPacmanGame(0);
   $('#formularioform').on("submit", function(e) {
     e.preventDefault();
     e.stopPropagation();
