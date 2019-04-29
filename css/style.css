@@ -64,12 +64,13 @@ p, small, form {
 .datosForm1{
   float: left;
   margin-right: auto;
+  width: 50%;
 }
 
 .datosForm2{
-float: left;
-margin-left:90px;
-margin-right: auto;
+  float: left;
+  width: 50%;
+  margin-right: auto;
 }
 
 .datosForm3{
@@ -130,6 +131,7 @@ fieldset{
 #formulario .field input {
   margin-top: 1px;
   margin-bottom: 15px;
+  width: calc(100% - 30px);
 }
 #formulario .required:after {
   content: "*";
