@@ -52,38 +52,50 @@ var sprites = {
     virus1: {
       imgPath: 'img/virus/virus1.png',
       imgPathEdible: 'img/virus/virus1_edible.png',
+      imgPathEaten: 'img/virus/virus1_blanco.png',
       img: null,
       imgEdible: null,
+      imgEaten: null,
     },
     virus2: {
       imgPath: 'img/virus/virus2.png',
       imgPathEdible: 'img/virus/virus2_edible.png',
+      imgPathEaten: 'img/virus/virus2_blanco.png',
       img: null,
       imgEdible: null,
+      imgEaten: null,
     },
     virus3: {
       imgPath: 'img/virus/virus3.png',
       imgPathEdible: 'img/virus/virus3_edible.png',
+      imgPathEaten: 'img/virus/virus3_blanco.png',
       img: null,
       imgEdible: null,
+      imgEaten: null,
     },
     virus4: {
       imgPath: 'img/virus/virus4.png',
       imgPathEdible: 'img/virus/virus4_edible.png',
+      imgPathEaten: 'img/virus/virus4_blanco.png',
       img: null,
       imgEdible: null,
+      imgEaten: null,
     },
     virus5: {
       imgPath: 'img/virus/virus5.png',
       imgPathEdible: 'img/virus/virus5_edible.png',
+      imgPathEaten: 'img/virus/virus5_blanco.png',
       img: null,
       imgEdible: null,
+      imgEaten: null,
     },
     virus6: {
       imgPath: 'img/virus/virus6.png',
       imgPathEdible: 'img/virus/virus6_edible.png',
+      imgPathEaten: 'img/virus/virus6_blanco.png',
       img: null,
       imgEdible: null,
+      imgEaten: null,
     },
   },
 };
@@ -98,6 +110,8 @@ for (var key in sprites.ghosts){
   sprites.ghosts[key].img.src = sprites.ghosts[key].imgPath;
   sprites.ghosts[key].imgEdible = new Image();
   sprites.ghosts[key].imgEdible.src = sprites.ghosts[key].imgPathEdible;
+  sprites.ghosts[key].imgEaten = new Image();
+  sprites.ghosts[key].imgEaten.src = sprites.ghosts[key].imgPathEaten;
 }
 
 // img/noun_virus_1867963_000000.svg
@@ -295,7 +309,7 @@ Pacman.Ghost = function (game, map, colour) {
         ctx.fillRect(pxm, pym, s, s);
         ctx.closePath();
 
-        var ghostData = sprites.ghosts[getColour()];
+        var ghostData = sprites.ghosts[colour];
         var ghostImg = null;
         if (eaten) {
           ghostImg = ghostData.imgEaten;
