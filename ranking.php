@@ -13,11 +13,13 @@ $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Permanent+Marker" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/font_Permanent_Marker.css" />
+  <script src="js/modernizr.min.js"></script>
+  <script src="js/jquery.min.js"></script>
   <script src="js/script.js"></script>
   <link rel="icon" href="img/cropped-mrH-32x32.png" sizes="32x32" />
+
+  <meta http-equiv="refresh" content="10">
 </head>
 <body>
   <div id="logo">
