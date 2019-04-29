@@ -34,17 +34,6 @@ var colors = {
 };
 colors.footerBackground = colors.background;
 
-var mrH = {
-  superPill: {
-    imgPath: 'img/mrH_pacman.png',
-    img: null,
-    height: 22,
-    width: 15,
-  }
-};
-mrH.superPill.img = new Image();
-mrH.superPill.img.src = mrH.superPill.imgPath;
-
 var sprites = {
   player: {
     imgPath: 'img/pacmansprite.png',
@@ -53,10 +42,19 @@ var sprites = {
     cicleDurationSeconds: 1,
     height: 22,
     width: 15,
+  },
+  superPill: {
+    imgPath: 'img/mrH_pill.png',
+    img: null,
+    height: 22,
+    width: 15,
   }
 };
 sprites.player.img = new Image();
 sprites.player.img.src = sprites.player.imgPath;
+
+sprites.superPill.img = new Image();
+sprites.superPill.img.src = sprites.superPill.imgPath;
 
 // img/noun_virus_1867963_000000.svg
 // Set as a variable to avoid having to load more files than neccesary
@@ -838,21 +836,41 @@ Pacman.Map = function (size) {
         for (i = 0; i < height; i += 1) {
 		    for (j = 0; j < width; j += 1) {
                 if (map[i][j] === Pacman.PILL) {
+
+                    if (pillSize < 15) {
+                      pillSizeStep = pillSize / 15;
+                    } else{
+                      pillSizeStep = (30-pillSize) / 15;
+                    }
+
+                    var s = blockSize * pillSizeStep;
+                    var pxm = j * blockSize + (blockSize - s)/2;
+                    var pym = i * blockSize + (blockSize - s)/2;
+
+                    ctx.beginPath();
+                    ctx.fillStyle = colors.background;
+                    ctx.fillRect((j * blockSize), (i * blockSize), blockSize, blockSize);
+                    ctx.closePath();
+
+                    ctx.drawImage(sprites.superPill.img, pxm, pym, s, s);
+
+                    /*
                     ctx.beginPath();
 
-                   ctx.fillStyle = colors.background;
-		               ctx.fillRect((j * blockSize), (i * blockSize),
-                                 blockSize, blockSize);
+                    ctx.fillStyle = colors.background;
+                    ctx.fillRect((j * blockSize), (i * blockSize),
+                      blockSize, blockSize);
 
                     ctx.fillStyle = colors.pills;
                     ctx.arc((j * blockSize) + blockSize / 2,
-                            (i * blockSize) + blockSize / 2,
-                            Math.abs(5 - (pillSize/3)),
-                            0,
-                            Math.PI * 2, false);
-                  /*  ctx.drawImage(mrH.superPill.img, pxm, pym, s, s);*/
+                      (i * blockSize) + blockSize / 2,
+                      Math.abs(5 - (pillSize/3)),
+                      0,
+                      Math.PI * 2, false);
+
                     ctx.fill();
                     ctx.closePath();
+                    */
                 }
 		    }
 	    }
@@ -1752,6 +1770,7 @@ function displayForm() {
 
 
 $(function(){
+  displayPacmanGame(0);
   $('#formularioform').on("submit", function(e) {
     e.preventDefault();
     e.stopPropagation();
