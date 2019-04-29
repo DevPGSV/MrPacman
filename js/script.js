@@ -1061,7 +1061,8 @@ var PACMAN = (function () {
         timer        = null,
         map          = null,
         user         = null,
-        stored       = null;
+        stored       = null,
+        person_uid   = null;
 
     function getTick() {
         return tick;
@@ -1140,15 +1141,17 @@ var PACMAN = (function () {
 
     function submitScore() {
       function http_build_params( obj ) { // https://stackoverflow.com/a/18116302/4114225
-        return '?'+Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
+        return ''+Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
       }
 
       var submitData = {
-        "uid" : 1,
+        "uid" : person_uid,
         "score" : user.theScore(),
+        "level": level,
       };
       var xmlHttp = new XMLHttpRequest();
       xmlHttp.open( "POST", "api/score.php", false ); // false for synchronous request
+      xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       xmlHttp.send( http_build_params(submitData) );
       console.log(xmlHttp.responseText);
 
@@ -1332,11 +1335,12 @@ var PACMAN = (function () {
         }
     };
 
-    function init(wrapper) {
+    function init(wrapper, uid) {
 
         var i, len, ghost,
             blockSize = wrapper.offsetWidth / Pacman.MAP[0].length, // wrapper.offsetWidth / Pacman.MAP[0].length
             canvas    = document.createElement("canvas");
+        person_uid = uid;
 
         canvas.setAttribute("width", (blockSize * Pacman.MAP[0].length) + "px");
         canvas.setAttribute("height", (blockSize * Pacman.MAP.length) + 30 + "px");
@@ -1708,6 +1712,7 @@ Pacman.WALLS = [
 */
 ];
 
+
 Object.prototype.clone = function () {
     var i, newObj = (this instanceof Array) ? [] : {};
     for (i in this) {
@@ -1723,14 +1728,58 @@ Object.prototype.clone = function () {
     return newObj;
 };
 
-$(function(){
+function displayPacmanGame(uid) {
+  $('#formulario').hide();
   var el = document.getElementById("pacman");
-
-  if (Modernizr.canvas && Modernizr.localstorage &&
-      Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
-    window.setTimeout(function () { PACMAN.init(el); }, 0);
+  el.style.display = 'block';
+  var decentBrowser = Modernizr.canvas && Modernizr.localstorage &&
+      Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3);
+  if (decentBrowser) {
+    window.setTimeout(function () { PACMAN.init(el, uid); }, 0);
   } else {
     el.innerHTML = "<p>Sorry, needs a decent browser</p><br /><small>" +
       "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
   }
+}
+
+function displayForm() {
+  $('#pacman').hide();
+  $('#formulario').show();
+}
+
+
+
+$(function(){
+  $('#formularioform').on("submit", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    function http_build_params( obj ) { // https://stackoverflow.com/a/18116302/4114225
+      return Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
+    }
+
+    var submitData = {
+      "nombre": document.getElementById("nombre").value,
+      "apellidos": document.getElementById("apellidos").value,
+      "nick": document.getElementById("nick").value,
+      "email": document.getElementById("email").value,
+      "twitter": document.getElementById("twitter").value,
+      "empresa": document.getElementById("empresa").value,
+      "cargo": document.getElementById("cargo").value,
+      "comunicados": document.getElementById("comunicados").value,
+      "condiciones": document.getElementById("condiciones").value,
+    };
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "POST", "api/form.php", false ); // false for synchronous request
+    xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xmlHttp.send( http_build_params(submitData) );
+    var result = JSON.parse(xmlHttp.responseText);
+    if (result['status'] === "ok") {
+      displayPacmanGame(result['uid']);
+    } else {
+      alert(result['errors']);
+    }
+    return false;
+  });
+
 });

@@ -118,6 +118,22 @@ fieldset{
   text-align: center;
 }
 
+fieldset{
+    padding: 3%;
+    margin-bottom: 20px;
+}
+
+#formulario .field label {
+  display: block;
+}
+#formulario .field input {
+  margin-top: 1px;
+  margin-bottom: 15px;
+}
+#formulario .required:after {
+  content: "*";
+  display: inline;
+  color: red;
 table, td, th{
   border: 2px solid #FFFFFF;
 }

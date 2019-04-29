@@ -1,4 +1,15 @@
-<html>
+<?php
+
+require_once(__DIR__.'/api/db.php');
+
+$stmt = $db->query("
+  SELECT DISTINCT Person.uid, Person.nombre, MAX(Scores.score) 'MaxScore'
+  FROM Scores JOIN Person ON Scores.person_uid = Person.uid
+  GROUP BY Person.uid
+  ORDER BY MaxScore DESC, Person.uid ASC
+");
+$scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?><html>
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/style.css" />
@@ -15,27 +26,22 @@
     <h1>We've had a problem here</h1>
     <div id="ranking">
     <table class="ranking">
-      /**Habría que realizar una función para que se construyera la tabla a medida que se van creando los registros en la BBDD**/
       <tr>
         <th id="posicion">Posición</th>
         <th>Nickname</th>
         <th>Puntuación</th>
       </tr>
-      <tr>
-        <td>1</td>
-        <td>Pepe33</td>
-        <td>200</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>Tonia</td>
-        <td>150</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>XXX</td>
-        <td>100</td>
-      </tr>
+      <?php
+      $pos = 0;
+      foreach ($scores as $score) {
+        $pos++;
+        echo "<tr>\n";
+        echo "  <td>$pos</td>\n";
+        echo "  <td>{$score['nombre']}</td>\n";
+        echo "  <td>{$score['MaxScore']}</td>\n";
+        echo "</tr>\n";
+      }
+      ?>
       </table>
     </div>
 </body>
