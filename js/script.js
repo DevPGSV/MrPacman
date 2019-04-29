@@ -1177,10 +1177,10 @@ var PACMAN = (function () {
 
     function dialog(text) {
         ctx.fillStyle = colors.dialog;
-        ctx.font      = "18px Calibri";
+        ctx.font      = "20px Calibri";
         var width = ctx.measureText(text).width,
             x     = ((map.width * map.blockSize) - width) / 2;
-        ctx.fillText(text, x, (map.height * 10) + 8);
+        ctx.fillText(text, x, (map.height * 12) + 9);
     }
 
     function soundDisabled() {
