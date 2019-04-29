@@ -26,7 +26,8 @@ var colors = {
   'pacmanDead': '#FFFF00',
   'pills': '#FFF',
   'biscuits': '#FFF',
-  'ghosts': ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847", "#0022FF", "#00FF11", "#C300D1"],
+  //'ghosts': ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847", "#0022FF", "#00FF11", "#C300D1"],
+  'ghosts': ["virus1", "virus2", "virus3", "virus4", "virus5", "virus6"],
   'ghostEdibleEatenText': "#FFFFFF",
   'ghostEdible': COLOR_ORANGE_MRHOUSTON,
   'ghostEdibleEaten': '#222',
@@ -46,15 +47,44 @@ var sprites = {
   superPill: {
     imgPath: 'img/mrH_pill.png',
     img: null,
-    height: 22,
-    width: 15,
-  }
+  },
+  ghosts: {
+    virus1: {
+      imgPath: 'img/virus/virus1.png',
+      img: null,
+    },
+    virus2: {
+      imgPath: 'img/virus/virus2.png',
+      img: null,
+    },
+    virus3: {
+      imgPath: 'img/virus/virus3.png',
+      img: null,
+    },
+    virus4: {
+      imgPath: 'img/virus/virus4.png',
+      img: null,
+    },
+    virus5: {
+      imgPath: 'img/virus/virus5.png',
+      img: null,
+    },
+    virus6: {
+      imgPath: 'img/virus/virus6.png',
+      img: null,
+    },
+  },
 };
 sprites.player.img = new Image();
 sprites.player.img.src = sprites.player.imgPath;
 
 sprites.superPill.img = new Image();
 sprites.superPill.img.src = sprites.superPill.imgPath;
+
+for (var key in sprites.ghosts){
+  sprites.ghosts[key].img = new Image();
+  sprites.ghosts[key].img.src = sprites.ghosts[key].imgPath;
+}
 
 // img/noun_virus_1867963_000000.svg
 // Set as a variable to avoid having to load more files than neccesary
@@ -245,9 +275,18 @@ Pacman.Ghost = function (game, map, colour) {
         var pxm = left;
         var pym = top;
 
+        // Ghost background
+        ctx.beginPath();
+        ctx.fillStyle = colors.background;
+        ctx.fillRect(pxm, pym, s, s);
+        ctx.closePath();
 
+        // Custom png ghosts
+        ctx.drawImage(sprites.ghosts[getColour()].img, pxm, pym, s, s);
 
-    /*    // Create a DOMParser, load XML, parse it, get SVG item, get elems with class "drawElement", change their colors
+        // Custom svg ghosts
+        /*
+        // Create a DOMParser, load XML, parse it, get SVG item, get elems with class "drawElement", change their colors
         var parser = new DOMParser();
         var xmlDoc = parser.parseFromString(ghostSvgSprite, "text/xml");
         var svg = xmlDoc.getElementsByTagName('svg')[0];
@@ -267,9 +306,9 @@ Pacman.Ghost = function (game, map, colour) {
 
         // Draw image object
         ctx.drawImage(ghost, pxm, pym, s, s);
+        */
 
-*/
-
+        // Original ghosts
         /*
         ctx.fillStyle = getColour();
         ctx.beginPath();
@@ -842,6 +881,8 @@ Pacman.Map = function (size) {
                     } else{
                       pillSizeStep = (30-pillSize) / 15;
                     }
+
+                    if (pillSizeStep < 0.6) pillSizeStep = 0.6;
 
                     var s = blockSize * pillSizeStep;
                     var pxm = j * blockSize + (blockSize - s)/2;
