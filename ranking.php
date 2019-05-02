@@ -2,9 +2,12 @@
 
 require_once(__DIR__.'/api/db.php');
 
+$today = strtotime('00:00:00');
+
 $stmt = $db->query("
   SELECT DISTINCT Person.uid 'uid', Person.nick 'nick', MAX(Scores.score) 'MaxScore'
   FROM Scores JOIN Person ON Scores.person_uid = Person.uid
+  WHERE Scores.timestamp > $today
   GROUP BY Person.uid
   ORDER BY MaxScore DESC, Person.uid ASC
 ");
