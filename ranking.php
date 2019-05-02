@@ -39,7 +39,7 @@ $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $pos++;
         echo "<tr>\n";
         echo "  <td>$pos</td>\n";
-        echo "  <td>{$score['nick']}</td>\n";
+        echo "  <td>".htmlentities($score['nick'])."</td>\n";
         echo "  <td>{$score['MaxScore']}</td>\n";
         echo "</tr>\n";
       }
