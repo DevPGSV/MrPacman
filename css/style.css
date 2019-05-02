@@ -159,6 +159,10 @@ th{
   height: 35px;
 }
 
+tr.highlight>td {
+  background-color: #ED6E00;
+}
+
 /*a {
   text-decoration: none;
   color: #ED6E00;

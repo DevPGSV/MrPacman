@@ -9,6 +9,21 @@ $stmt = $db->query("
   ORDER BY MaxScore DESC, Person.uid ASC
 ");
 $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$highlightUid = empty($_GET['uid']) ? -1 : intval($_GET['uid']);
+$redirTime = empty($_GET['redirtime']) ? 10 : intval($_GET['redirtime']);
+$redirPage = empty($_GET['redirpage']) ? '' : $_GET['redirpage'];
+if (!in_array($redirPage, ['.', 'index.html', 'ranking.php', 'aviso-legal.html'])) {
+  $redirPage = '';
+}
+$redirCode = '';
+if (empty($redirPage)) {
+  $redirCode = "<meta http-equiv='refresh' content='$redirTime'>";
+} else {
+  $redirCode = "<meta http-equiv='refresh' content='$redirTime; url=$redirPage'>";
+}
+
+
 ?><html>
 <head>
   <meta charset="UTF-8">
@@ -18,8 +33,7 @@ $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <script src="js/jquery.min.js"></script>
   <script src="js/script.js"></script>
   <link rel="icon" href="img/cropped-mrH-32x32.png" sizes="32x32" />
-
-  <meta http-equiv="refresh" content="10">
+  <?php echo $redirCode; ?>
 </head>
 <body>
   <div id="logo">
@@ -37,7 +51,11 @@ $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
       $pos = 0;
       foreach ($scores as $score) {
         $pos++;
-        echo "<tr>\n";
+        if ($highlightUid === $score['uid']) {
+          echo "<tr class='highlight'>\n";
+        } else {
+          echo "<tr>\n";
+        }
         echo "  <td>$pos</td>\n";
         echo "  <td>".htmlentities($score['nick'])."</td>\n";
         echo "  <td>{$score['MaxScore']}</td>\n";
