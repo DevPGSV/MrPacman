@@ -13,6 +13,9 @@ var speedLevelMultiplier = 0.2; // speed: speedBaseMultiplier + (speedLevelMulti
 var startGameCountdown = 3;
 var biscuitsToCompleteLevel = 365; // 357 + 8 = 365
 
+var gameOverText = 'Game over';
+var gameOverTimeoutRedir = 2 * 1000; // milliseconds
+
 var COLOR_ORANGE_MRHOUSTON = '#ED6E00';
 
 var colors = {
@@ -159,6 +162,11 @@ var portals = [
     //newDirection: RIGHT,
   }
 ];
+
+
+function http_build_params( obj ) { // https://stackoverflow.com/a/18116302/4114225
+  return ''+Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
+}
 
 Pacman.FPS = 30;
 
@@ -1234,15 +1242,11 @@ var PACMAN = (function () {
         if (user.getLives() > 0) {
             startLevel();
         } else {
-            submitScore();
+            gameOver();
         }
     }
 
     function submitScore() {
-      function http_build_params( obj ) { // https://stackoverflow.com/a/18116302/4114225
-        return ''+Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
-      }
-
       var submitData = {
         "uid" : person_uid,
         "score" : user.theScore(),
@@ -1253,8 +1257,15 @@ var PACMAN = (function () {
       xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       xmlHttp.send( http_build_params(submitData) );
       console.log(xmlHttp.responseText);
+    }
 
-      console.log("Score:", user.theScore());
+    function gameOver() {
+      setState(PAUSE);
+      dialog(gameOverText);
+      submitScore();
+      setTimeout(function() {
+        window.location.href = "ranking.php?" + http_build_params({uid: person_uid, redirtime: 10, redirpage: '.'});
+      }, gameOverTimeoutRedir);
     }
 
     function setState(nState) {
@@ -1852,10 +1863,6 @@ $(function(){
   $('#formularioform').on("submit", function(e) {
     e.preventDefault();
     e.stopPropagation();
-
-    function http_build_params( obj ) { // https://stackoverflow.com/a/18116302/4114225
-      return Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
-    }
 
     var submitData = {
       "nombre": document.getElementById("nombre").value,
