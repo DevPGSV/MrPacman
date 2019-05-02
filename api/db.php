@@ -7,6 +7,9 @@ $_SQL = [
    'pw' => '6h4ddh1n61hsn'
 ];
 
+
+date_default_timezone_set ( "Europe/Madrid" );
+
 function dbConnect($host, $dbName, $user, $pw) {
    try {//
       $db = new PDO("mysql:host=$host;dbname=$dbName;charset=utf8", $user, $pw);
@@ -40,7 +43,7 @@ SELECT:
    }
    //----------------------
    $stmt = $db->query('SELECT * FROM table');
-    
+
    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
        echo $row['field1'].' '.$row['field2']; //etc...
    }
@@ -91,8 +94,8 @@ Executing prepared statements in a loop: bindParam binds by reference ==> change
    foreach($values as $name) {
       $stmt->execute();
    }
-   
-   
+
+
 Transactions:
    try {
       $db->beginTransaction();
@@ -102,6 +105,5 @@ Transactions:
       $db->rollback();
       $e->getMessage()
    }
-    
-*/
 
+*/
