@@ -20,7 +20,7 @@ if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] !== $basicAut
 require_once(__DIR__.'/api/db.php');
 
 $stmt = $db->query("
-  SELECT DISTINCT Person.uid 'uid', Person.nombre 'nombre', Person.apellidos 'apellidos', Person.nick 'nick', Person.email 'email', Person.twitter 'twitter', Person.empresa 'empresa', Person.cargo 'cargo', MAX(Scores.score) 'MaxScore'
+  SELECT DISTINCT Person.uid 'uid', Person.nombre 'nombre', Person.apellidos 'apellidos', Person.nick 'nick', Person.email 'email', Person.twitter 'twitter', Person.empresa 'empresa', Person.cargo 'cargo', MAX(Scores.score) 'MaxScore', Scores.timestamp 'timestamp'
   FROM Scores JOIN Person ON Scores.person_uid = Person.uid
   GROUP BY Person.uid
   ORDER BY MaxScore DESC, Person.uid ASC
@@ -50,6 +50,7 @@ $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>Empresa</th>
         <th>Cargo</th>
         <th>Puntuación</th>
+        <th>Fecha</th>
       </tr>
       <?php
       $pos = 0;
@@ -74,6 +75,7 @@ $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo "  <td>".htmlentities($score['empresa'])."</td>\n";
         echo "  <td>".htmlentities($score['cargo'])."</td>\n";
         echo "  <td>{$score['MaxScore']}</td>\n";
+        echo "  <td>" . date("d/m h:i",$score['timestamp']) . "</td>\n";
         echo "</tr>\n";
       }
       ?>
