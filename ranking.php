@@ -49,10 +49,22 @@ if (empty($redirPage)) {
       </tr>
       <?php
       $pos = 0;
+      $maxPos = 10;
       foreach ($scores as $score) {
         $pos++;
+        if ($pos > $maxPos && $highlightUid !== $score['uid']) {
+          continue;
+        }
         if ($highlightUid === $score['uid']) {
+          if ($pos > $maxPos+1) {
+            echo "<tr>\n";
+            echo "  <td>11 ··· " . ($pos-1) . "</td>\n";
+            echo "  <td>···</td>\n";
+            echo "  <td>···</td>\n";
+            echo "</tr>\n";
+          }
           echo "<tr class='highlight'>\n";
+          $selectedUidDisplayed = true;
         } else {
           echo "<tr>\n";
         }
