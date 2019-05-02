@@ -3,7 +3,7 @@
 require_once(__DIR__.'/api/db.php');
 
 $stmt = $db->query("
-  SELECT DISTINCT Person.uid, Person.nombre, MAX(Scores.score) 'MaxScore'
+  SELECT DISTINCT Person.uid 'uid', Person.nick 'nick', MAX(Scores.score) 'MaxScore'
   FROM Scores JOIN Person ON Scores.person_uid = Person.uid
   GROUP BY Person.uid
   ORDER BY MaxScore DESC, Person.uid ASC
@@ -39,7 +39,7 @@ $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $pos++;
         echo "<tr>\n";
         echo "  <td>$pos</td>\n";
-        echo "  <td>{$score['nombre']}</td>\n";
+        echo "  <td>{$score['nick']}</td>\n";
         echo "  <td>{$score['MaxScore']}</td>\n";
         echo "</tr>\n";
       }
