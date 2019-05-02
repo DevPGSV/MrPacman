@@ -10,8 +10,9 @@
 
 var speedBaseMultiplier = 1;
 var speedLevelMultiplier = 0.2; // speed: speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
-var startGameCountdown = 3;
+var startGameCountdown = 4;
 var biscuitsToCompleteLevel = 365; // 357 + 8 = 365
+var survivalTimeToCompleteLevel = 60; // seconds
 
 var gameOverText = 'Game over';
 var gameOverTimeoutRedir = 2 * 1000; // milliseconds
@@ -1378,6 +1379,10 @@ var PACMAN = (function () {
 
         if (state === PLAYING) {
             mainDraw();
+            if ((tick - timerStart) / Pacman.FPS >= survivalTimeToCompleteLevel) {
+              completedLevel();
+            }
+            console.log((tick - timerStart) / Pacman.FPS);
         } else if (state === WAITING && stateChanged) {
             stateChanged = false;
             map.draw(ctx);
@@ -1426,16 +1431,23 @@ var PACMAN = (function () {
     };
 
     function completedLevel() {
-        setState(WAITING);
-        level += 1;
-        map.reset();
+        setState(PAUSE);
+        dialog("Completed level");
+        submitScore();
+        setTimeout(function() {
+          setState(WAITING);
+          level += 1;
+          user.addScore(1000);
+          map.reset();
 
-        var speedMultiplier = speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
-        clearInterval(timer);
-        timer = window.setInterval(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
+          var speedMultiplier = speedBaseMultiplier + (speedLevelMultiplier * (level - 1));
+          clearInterval(timer);
+          timer = window.setInterval(mainLoop, (1000 / Pacman.FPS) / speedMultiplier);
 
-        user.newLevel();
-        startLevel();
+          user.newLevel();
+          startLevel();
+        }, 1000);
+
     };
 
     function keyPress(e) {
