@@ -1382,7 +1382,6 @@ var PACMAN = (function () {
             if ((tick - timerStart) / Pacman.FPS >= survivalTimeToCompleteLevel) {
               completedLevel();
             }
-            console.log((tick - timerStart) / Pacman.FPS);
         } else if (state === WAITING && stateChanged) {
             stateChanged = false;
             map.draw(ctx);
