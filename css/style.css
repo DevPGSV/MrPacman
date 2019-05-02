@@ -164,3 +164,14 @@ th{
   color: #ED6E00;
 }
 */
+
+#avisolegal {
+  margin:auto;
+  width:700px;
+}
+#avisolegal h3 {
+  color: white;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
